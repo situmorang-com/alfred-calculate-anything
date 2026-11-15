@@ -1,0 +1,8 @@
+# The owner's saved settings, which can include API keys. Alfred writes it.
+prefs.plist
+# Notes about the owner's Mac. They stay on that Mac.
+docs/LOCAL.md
+
+.DS_Store
+__pycache__/
+*.pyc
