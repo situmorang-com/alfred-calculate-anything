@@ -13,7 +13,8 @@ Read the one that matches what you are about to do, and update it when you chang
 - `docs/MEMORY.md`: before revisiting a decision, debugging an Alfred quirk, or testing inside Alfred. Decisions with their reasons, verified Alfred behaviour, the live-test procedure, environment facts, history.
 - `docs/LOCAL.md`, on the owner's Mac only (git ignores it): before testing inside Alfred or touching anything outside this folder. Paths, backup setup, accounts, house rules.
 - `docs/CHANGELOG.md`: release notes.
-- `README.md`: what users can type, and every setting.
+- `docs/MANUAL.md`: the user manual, every query form and setting. Update it with every change users can see.
+- `README.md`: the landing page, with install steps and a quick tour.
 
 ## Rules
 

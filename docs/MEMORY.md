@@ -6,7 +6,7 @@ Shared memory for everyone who works on this workflow, person or agent, whicheve
 
 - v5.0.1, public at https://github.com/situmorang-com/alfred-calculate-anything, released as `v5.0.1` with `Calculate.Anything.alfredworkflow` attached, and installed on the owner's Mac (where: `docs/LOCAL.md`).
 - Verified in Alfred: `100 usd to idr` (flag, rate age), `1 btc` (IDR, USD and EUR rows), `100 km to miles` (two rows), `time +15 days`, `vat 400`, `color #ff6600` (swatches), and `1password` (no rows from this workflow). Return copied `1,822,936.37`, ⌘ Return `1822936.37`, ⌥ Return `18229.363747`.
-- Verified offline: the 66 tests on Python 3.9.6 and 3.15; a fuzz run of 12,000 random queries (numbers, units, keywords, junk, odd settings) with no crash after fixing the one it found.
+- Verified offline: the 67 tests on Python 3.9.6 and 3.15; a fuzz run of 12,000 random queries (numbers, units, keywords, junk, odd settings) with no crash after fixing the one it found.
 - Not verified yet: the Configure Workflow panel in Alfred, `_caclear` inside Alfred, the Fixer and CoinMarketCap key paths (no keys to test with), Spanish and Swedish inside Alfred.
 
 ## Decisions
@@ -37,7 +37,7 @@ A space is a thousands separator only between real groups of three (`1 000 000`)
 
 ### Defaults come from the Mac (2026-11-13)
 
-Base currencies default to the region's currency plus USD and EUR (IDR, USD, EUR on a Mac set to Indonesia), the time zone to `/etc/localtime`, and slash dates to the region's order (month first only in US-style regions).
+Base currencies default to the region's currency plus USD, EUR and MYR (IDR, USD, EUR, MYR on a Mac set to Indonesia; the owner asked for MYR on 2026-11-15), the time zone to `/etc/localtime`, and slash dates to the region's order (month first only in US-style regions).
 
 ### Own bundle id (2026-11-13)
 
@@ -127,4 +127,4 @@ The free currency sources agreed within 0.25% on 16 sampled currencies.
 ## History
 
 - 2026-11-13: Studied upstream 4.0.7 and its 30 open issues, probed rate sources, rebuilt the workflow in Python, wrote the 66 tests.
-- 2026-11-15: Installed and checked in Alfred. Fuzzing found a crash on date formats that print nothing; fixed. Added `"` and `'` as inches and feet. The owner kept `time`. Added these docs and `tools/alfredctl.swift`. Set the VAT default to Indonesia's 11% and accepted `ppn` (5.0.1). Published to GitHub.
+- 2026-11-15: Installed and checked in Alfred. Fuzzing found a crash on date formats that print nothing; fixed. Added `"` and `'` as inches and feet. The owner kept `time`. Added these docs and `tools/alfredctl.swift`. Set the VAT default to Indonesia's 11% and accepted `ppn` (5.0.1). Published to GitHub. Added MYR to the default base currencies. Checking the manual's examples found two date bugs, both fixed: `days until 1 january` counted to the past January, and the timespan row compared clock times across zones (`time 9am in new york` said 13 hours instead of 1). Wrote `docs/MANUAL.md`, with appendices generated from the code.

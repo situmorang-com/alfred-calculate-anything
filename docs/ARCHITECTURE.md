@@ -60,10 +60,10 @@ Each module's docstring lists the query forms it accepts.
 
 ## Settings
 
-`ca.core.Settings` reads those environment variables; its `__init__` lists each variable with its default, and `README.md`, "Configuration", explains them to users. Values derived from the Mac when a setting is empty:
+`ca.core.Settings` reads those environment variables; its `__init__` lists each variable with its default, and `docs/MANUAL.md`, "Settings", explains them to users. Values derived from the Mac when a setting is empty:
 
 - Locale: `AppleLocale` from `~/Library/Preferences/.GlobalPreferences.plist`. Its region (`ID` in `en_ID`) gives the local currency through `data/regions.json`; a `@currency=XXX` locale suffix wins.
-- Base currencies: local currency, USD, EUR, without duplicates.
+- Base currencies: local currency, USD, EUR, MYR, without duplicates.
 - Time zone: the target of `/etc/localtime`.
 - Slash dates: month first only for regions in `core.MONTH_FIRST_REGIONS` (US-style).
 

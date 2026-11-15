@@ -338,6 +338,14 @@ class Currency(Base):
         self.assertEqual(titles('100 usd', base_currencies='USD'), ['100 USD'])
         self.assertEqual(titles('120 euros', base_currencies='idr,jpy'), ['2,133,333.33 IDR', '20,000 JPY'])
 
+    def test_default_base_currencies(self):
+        settings = core.Settings({'base_currencies': ''})
+        settings._locale = 'en_ID'
+        self.assertEqual(settings.base_currencies, ['IDR', 'USD', 'EUR', 'MYR'])
+        settings = core.Settings({'base_currencies': ''})
+        settings._locale = 'ms_MY'
+        self.assertEqual(settings.base_currencies, ['MYR', 'USD', 'EUR'])
+
     def test_rows(self):
         row = ask('1234.5 usd to mxn')['items'][0]
         self.assertEqual(row['title'], '24,690 MXN')
@@ -544,13 +552,17 @@ class Dates(Base):
         self.assertEqual(when('2021')[0], '1 January, 2021, 12:00:00 am')
         self.assertEqual(when('hours until tomorrow'), ['24 hours'])
         self.assertEqual(when('days since 1 january'), ['316 days'])
+        self.assertEqual(when('days until 1 january'), ['49 days'])          # the coming one, not last year's
+        self.assertEqual(when('days since 25 december'), ['323 days'])       # the last one, not next month's
+        self.assertEqual(when('days until 1 january 2026'), ['316 days'])    # an explicit year is respected
         self.assertEqual(when('31 january 2026 + 1 month')[0], '28 February, 2026, 12:00:00 am')
 
     def test_time_zones(self):
         self.assertEqual(when('3pm utc')[0], '13 November, 2026, 10:00:00 pm')       # asked for upstream
         self.assertEqual(when('now in tokyo')[0], '13 November, 2026, 10:15:00 pm')
         self.assertEqual(when('utc')[0], '13 November, 2026, 1:15:00 pm')
-        self.assertEqual(when('9am in new york')[0], '12 November, 2026, 9:00:00 pm')
+        self.assertEqual(when('9am in new york')[:2], ['12 November, 2026, 9:00:00 pm', '11 hours ago'])
+        self.assertEqual(when('11pm in london')[:2], ['13 November, 2026, 4:00:00 pm', '2 hours, 45 minutes'])
         self.assertEqual(when('2021-12-31T18:00:00Z')[0], '1 January, 2022, 1:00:00 am')
         self.assertEqual(when('2021-12-31 18:00 +09:00')[0], '31 December, 2021, 4:00:00 pm')
         self.assertEqual(when('', timezone='America/Mexico_City')[0], '13 November, 2026, 7:15:00 am')

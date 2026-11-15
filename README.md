@@ -35,7 +35,7 @@ Alfred picks the workflow up at once. To update it later, run `git pull` in that
 150k idr to usd           2.5 million yen to eur     (k, m, b, t or the words)
 ```
 
-Around 170 currencies by code (`idr`), by symbol (`Rp`, `RM`, `€`, `£`, `¥`, `$`) or by name (`rupiah`, `ringgit`, `pounds`, `swiss francs`). With no target, the amount is converted to the base currencies from the configuration; left empty, that is this Mac's local currency plus USD and EUR.
+Around 170 currencies by code (`idr`), by symbol (`Rp`, `RM`, `€`, `£`, `¥`, `$`) or by name (`rupiah`, `ringgit`, `pounds`, `swiss francs`). With no target, the amount is converted to the base currencies from the configuration; left empty, that is this Mac's local currency plus USD, EUR and MYR.
 
 ### Cryptocurrency
 
@@ -45,7 +45,7 @@ Around 170 currencies by code (`idr`), by symbol (`Rp`, `RM`, `€`, `£`, `¥`,
 10 ethereum in mxn        1000 sats to usd
 ```
 
-About 1,900 coins by ticker or name. A regular currency wins over a coin with the same ticker (PLN is the złoty). Because hundreds of tickers are everyday words, a bare `5 why` only works for the 250 largest coins; spell out the target (`5 why to usd`) for the rest.
+About 1,900 coins by ticker or name. A regular currency wins over a coin with the same ticker (PLN is the złoty). Because hundreds of tickers are everyday words, a bare `100 gas` only works for the 250 largest coins; spell out the target (`100 gas to usd`) for the rest.
 
 ### Units
 
@@ -123,52 +123,9 @@ Reads hex, rgb(a), hsl(a), hwb, hsv, cmyk, lab, oklch and CSS color names.
 | ⌘ Return | the value without formatting, `2376.54` |
 | ⌥ Return | the value of one unit (currency), or the value with its unit (units) |
 
-## Configuration
+## Manual
 
-Open the workflow in Alfred and choose **Configure Workflow**.
-
-| Setting | What it does |
-| --- | --- |
-| Language | English, Spanish or Swedish, for results and for the words you can type. English always works. |
-| Base currencies | Targets for an amount with no target, for example `USD, EUR`. |
-| Currency / cryptocurrency decimals | How many decimals to show. `-1` shows all of them. |
-| Input decimal separator | Whether you type `23.51` or `23,51`. |
-| Number output format | `1,234.56`, `1 234,56` or `1.234,56`. |
-| Time zone | For the time keyword. Automatic uses this Mac's. |
-| Date formats | PHP date letters, several separated by a pipe: `j F, Y, g:i:s a \| Y-m-d H:i:s`. |
-| Dates like 01/02/2026 | Day first or month first. Automatic follows this Mac's region. |
-| VAT percentage | Defaults to `11%`, Indonesia's PPN on most goods and services. |
-| Base pixels | Root font size for em and rem. |
-| Data storage | Binary mode. |
-| Refresh rates every | Hours between downloads. Default 6 for currencies, 0.25 for crypto. |
-| Keywords | Rename `time`, `vat` and `color` if they clash with another workflow. |
-| API keys | Optional. A fixer.io or coinmarketcap.com key is tried first if you have one. |
-
-`_caclear` deletes the cached rates.
-
-## Where the numbers come from
-
-Each list is tried in order, so one service going away does not break the workflow.
-
-| Data | Sources |
-| --- | --- |
-| Exchange rates | [exchangerate-api.com](https://www.exchangerate-api.com), [fawazahmed0/exchange-api](https://github.com/fawazahmed0/exchange-api) on two CDNs, [frankfurter.dev](https://frankfurter.dev), the [European Central Bank](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html) |
-| Crypto prices | [coinpaprika.com](https://coinpaprika.com), [coingecko.com](https://www.coingecko.com), [coinlore.net](https://www.coinlore.net) |
-
-Exchange rates are daily mid-market reference rates, not what a bank or card will give you. Each result says how old its rate is. With no connection the last downloaded rates keep working.
-
-## Your own words
-
-Words such as `kilometers`, `dollars` and `plus`, and stop words such as `to` and `in`, live in `lang/<language>-keys.json`. To add your own without losing them when the workflow is updated, create `custom-keys.json` in the workflow's data folder (`~/Library/Application Support/Alfred/Workflow Data/com.situmorang.calculateanything/`):
-
-```json
-{
-  "units": { "hakunamatata": "year" },
-  "currency": { "bucks": "USD" }
-}
-```
-
-`1 hakunamatata to months` now answers 12 months.
+Every query form, every setting, where the rates come from, adding your own words, and troubleshooting: [docs/MANUAL.md](docs/MANUAL.md).
 
 ## Changes
 

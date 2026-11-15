@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Base currencies default to this Mac's currency plus USD, EUR and MYR.
+- `time days until 1 january` counts to the coming 1 January, and `days since 25 december` from the last one.
+- The "how long ago" row is right when the answer is shown in another time zone (`time 9am in new york`).
+- A user manual: `docs/MANUAL.md`.
+
 ## 5.0.1 (2026-11-15)
 
 - VAT defaults to 11%, Indonesia's PPN on most goods and services (it was upstream's 16%). Luxury goods pay 12%: `vat 400 12%`.

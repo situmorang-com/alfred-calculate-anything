@@ -177,7 +177,7 @@ class Settings(object):
             raw = self.get('base_currencies', '')
             codes = [code.strip().upper() for code in re.split(r'[,;\s]+', raw) if code.strip()]
             if not codes:
-                codes = [self.local_currency, 'USD', 'EUR']
+                codes = [self.local_currency, 'USD', 'EUR', 'MYR']    # MYR: the owner's request
             seen = []
             for code in codes:
                 if code and code not in seen:

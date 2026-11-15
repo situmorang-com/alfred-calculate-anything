@@ -1581,7 +1581,7 @@ Exchange rates: exchangerate-api.com, fawazahmed0/exchange-api, frankfurter.dev,
 				<true/>
 			</dict>
 			<key>description</key>
-			<string>Typing an amount with no target ("100 yen") converts to these, separated by commas. Leave empty to use this Mac's local currency plus USD and EUR.</string>
+			<string>Typing an amount with no target ("100 yen") converts to these, separated by commas. Leave empty to use this Mac's local currency plus USD, EUR and MYR.</string>
 			<key>label</key>
 			<string>Base currencies</string>
 			<key>type</key>

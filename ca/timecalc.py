@@ -151,6 +151,8 @@ def add_weekdays(moment, count):
 
 def calendar_diff(start, end):
     """(years, months, days, hours, minutes, seconds) from start to end, start <= end."""
+    if start.tzinfo is not None and end.tzinfo is not None:
+        end = end.astimezone(start.tzinfo)        # compare clock times in one zone
     start, end = start.replace(tzinfo=None), end.replace(tzinfo=None)
     months = (end.year - start.year) * 12 + (end.month - start.month)
     if add_months(start, months) > end:
@@ -710,6 +712,21 @@ def _edge_of(kind, what, now):
     return None
 
 
+def _nearest_year(text, target, now, since):
+    """"days until 1 january" means the coming 1 January, "days since 25 december" the last one.
+    Applies only to dates written with a month name and no year."""
+    if re.search(r'\b\d{4}\b', text) or not re.search(r'\b%s\b' % _MONTH, text):
+        return target
+    moment = target.moment
+    if not since and moment < now:
+        moment = add_months(moment, 12)
+    elif since and moment > now:
+        moment = add_months(moment, -12)
+    else:
+        return target
+    return Parsed(moment, target.has_time, target.zone_shown)
+
+
 def _until(ctx, unit_word, target, now, since):
     """How many <unit> until (or since) a moment."""
     unit = UNIT_WORDS.get(unit_word)
@@ -773,6 +790,7 @@ def keyword(ctx, query, now=None):
             target = parse(found[1], now, zone, month_first)
             if not target:
                 return invalid
+            target = _nearest_year(found[1], target, now, since)
             counted = _until(ctx, found[0], target, now, since)
             if not counted:
                 return invalid
