@@ -3,13 +3,17 @@
 
     100 usd to idr        100 euros in dollars      100€ to $       100eur
     2 bitcoins to dollars 5 bitcoins in ethereum    1eth btc        1btc
-    150k idr to usd       2.5 million yen to eur
+    150k idr to usd       2.5 million yen to eur    1 crore inr to usd
+    100 usd to idr eur myr                          several targets at once
+    500rb   1,5jt ke usd                            Indonesian amounts: the local currency
+    1 xau   10 g gold to idr                        gold and silver, per troy ounce or by weight
 
 One parser serves both because either side of a conversion can be a currency or a
 coin. A regular currency always wins over a coin with the same ticker (PLN, ISK...).
 With no target the amount is converted to the configured base currencies.
 """
 import os
+import re
 import time
 
 from .core import (bundled, item, load_json, lookup, message, mod, parse_number, plain_number, split_amount,
@@ -20,6 +24,12 @@ from . import rates
 # target ("5 why to usd") any listed coin converts; typed bare ("5 why") only coins this
 # high in the market-cap ranking do, so ordinary Alfred searches stay free of noise.
 BARE_COIN_RANK = 250
+
+# Precious metals are quoted per troy ounce, so a weight converts through ounces.
+METALS = frozenset(['XAU', 'XAG', 'XPT', 'XPD'])
+
+# Words that join several targets: "100 usd to idr, eur and myr".
+_JOINERS = frozenset(['and', '&', 'dan', 'y', 'och', 'und'])
 
 
 class Money(object):
@@ -124,6 +134,46 @@ class Money(object):
             return ('crypto', symbol)
         return None
 
+    def targets(self, term, explicit=False):
+        """One currency or coin, or several: "idr", "idr eur myr", "idr, eur and myr"."""
+        single = self.resolve(term, explicit)
+        if single:
+            return [single]
+        words = [word for word in re.split(r'[\s,;+]+', term) if word and word not in _JOINERS]
+        found = []
+        position = 0
+        while position < len(words):
+            for size in (3, 2, 1):
+                piece = words[position:position + size]
+                hit = len(piece) == size and self.resolve(' '.join(piece), explicit)
+                if hit:
+                    if hit not in found:
+                        found.append(hit)
+                    position += size
+                    break
+            else:
+                return None
+        return found if len(found) > 1 else None
+
+    def metal(self, term):
+        """"g gold" -> (troy ounces in one gram, ('fiat', 'XAU')): gold and silver by weight."""
+        words = term.split()
+        if len(words) < 2:
+            return None
+        code = self.fiat(words[-1])
+        if code not in METALS:
+            return None
+        weight = words[:-1]
+        if weight[-1] in ('of', 'de', 'av'):
+            weight = weight[:-1]
+        from . import units
+        found = [pair for pair in units.resolve(units.build_index(self.ctx.lang), ' '.join(weight))
+                 if pair[0] == 'weight']
+        if not found:
+            return None
+        unit = 'ozt' if found[0][1] == 'oz' else found[0][1]   # metals are weighed in troy ounces
+        return units.convert(1.0, unit, 'ozt', 'weight'), ('fiat', code)
+
     # ------------------------------------------------------------- converting
 
     def rows(self, amount, source, targets):
@@ -224,14 +274,38 @@ class Money(object):
 
 
 def _multiplied(ctx, rest):
-    """"k usd" -> (1000, "usd"); thousands and millions written as a word or suffix."""
+    """"k usd" -> (1000, "usd", False): thousands and millions written as a word or suffix.
+
+    A word listed under multipliers -> local_currency ("rb", "juta") also means money in
+    the local currency when no currency follows: "500rb" -> (1000, "", True).
+    """
     table = ctx.lang.keywords('multipliers')
     words = rest.split(' ', 1)
-    if len(words) == 2 and words[1].strip():
-        factor = lookup(table, words[0])
-        if isinstance(factor, (int, float)) and factor > 0:
-            return float(factor), words[1].strip()
+    factor = lookup(table, words[0])
+    if not isinstance(factor, (int, float)) or factor <= 0:
+        return None
+    remaining = words[1].strip() if len(words) == 2 else ''
+    local = words[0] in ctx.lang.phrases('multipliers', 'local_currency')
+    if not remaining and not local:
+        return None
+    return float(factor), remaining, local
+
+
+def _after_stop(text, stops):
+    """"to usd" -> "usd", "" -> "", "rupiah" -> None (the text does not start with a stop word)."""
+    if not text:
+        return ''
+    for stop in sorted(stops, key=len, reverse=True):
+        if text == stop:
+            return ''
+        if text.startswith(stop + ' '):
+            return text[len(stop) + 1:].strip()
     return None
+
+
+def _base_targets(ctx, source):
+    targets = [('fiat', code) for code in ctx.settings.base_currencies if ('fiat', code) != source]
+    return targets or [source]
 
 
 def process(ctx, query):
@@ -245,27 +319,36 @@ def process(ctx, query):
     scaled = _multiplied(ctx, rest)
     if scaled:
         attempts.append(scaled)
-    attempts.append((1.0, rest))
-    for factor, text in attempts:
+    attempts.append((1.0, rest, False))
+    for factor, text, local in attempts:
+        amount = parse_number(number, ctx.settings) * factor
+        if local and ctx.settings.local_currency:
+            wanted = _after_stop(text, stops)               # "500rb", "1,5jt ke usd"
+            if wanted is not None:
+                source = ('fiat', ctx.settings.local_currency)
+                targets = money.targets(wanted, True) if wanted else _base_targets(ctx, source)
+                if targets:
+                    return money.rows(amount, source, targets)
         for from_term, to_term, had_stop in term_splits(text, stops):
             if from_term in stops:
                 continue
             explicit = had_stop and bool(to_term)
+            ounces = 1.0
             source = money.resolve(from_term, explicit)
             if not source:
-                continue
-            if to_term:
-                target = money.resolve(to_term, explicit)
-                if not target:
+                weighed = money.metal(from_term)            # "10 g gold"
+                if not weighed:
                     continue
-                targets = [target]
+                ounces, source = weighed
+            if to_term:
+                targets = money.targets(to_term, explicit)
+                if not targets:
+                    continue
             else:
                 if source[0] == 'crypto' and _also_a_unit(ctx, from_term):
                     continue                    # "100 km" is not a request for the KM coin
-                targets = [('fiat', code) for code in ctx.settings.base_currencies if ('fiat', code) != source]
-                targets = targets or [source]
-            amount = parse_number(number, ctx.settings) * factor
-            return money.rows(amount, source, targets)
+                targets = _base_targets(ctx, source)
+            return money.rows(amount * ounces, source, targets)
     return None
 
 

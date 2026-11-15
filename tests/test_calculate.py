@@ -26,14 +26,15 @@ os.environ['alfred_workflow_data'] = DATA
 from ca import app, core, rates, timecalc  # noqa: E402
 
 RATES = {'USD': 1.0, 'EUR': 0.9, 'IDR': 16000.0, 'MXN': 20.0, 'JPY': 150.0, 'CAD': 1.4, 'ARS': 1000.0,
-         'GBP': 0.8, 'MYR': 4.5, 'SEK': 10.0, 'PLN': 4.0, 'COP': 4000.0, 'BRL': 5.0, 'KRW': 1300.0}
+         'GBP': 0.8, 'MYR': 4.5, 'SEK': 10.0, 'PLN': 4.0, 'COP': 4000.0, 'BRL': 5.0, 'KRW': 1300.0,
+         'XAU': 0.0005}
 COINS = {'BTC': ['Bitcoin', 60000.0, 1], 'ETH': ['Ethereum', 3000.0, 2], 'DOGE': ['Dogecoin', 0.1, 9],
          'PLN': ['Some Token', 2.0, 900], 'WHY': ['Why Coin', 0.5, 800], 'KM': ['Kilometer Coin', 1.0, 40],
          'A': ['Vaulta', 0.5, 90], 'SATS': ['SATS (Ordinals)', 1e-8, 150],
          'SAT': ['Satoshi', 0.0006, 0]}
 
 BASE_ENV = {'language': 'en_EN', 'base_currencies': 'USD, MXN', 'timezone': 'Asia/Jakarta',
-            'vat_value': '16%', 'date_order': 'dmy'}
+            'vat_value': '16%', 'date_order': 'dmy', 'input_language': 'none'}
 NOW = dt.datetime(2026, 11, 13, 20, 15, 0, tzinfo=core.load_timezone('Asia/Jakarta'))   # a Friday
 
 
@@ -114,6 +115,17 @@ class Numbers(Base):
         # one that reads two ways follows the setting
         self.assertEqual(core.parse_number('1,500', dot), 1500.0)
         self.assertEqual(core.parse_number('1,500', comma), 1.5)
+        # a single mark not followed by three digits can only be a decimal point
+        self.assertEqual(core.parse_number('1,5', dot), 1.5)
+        self.assertEqual(core.parse_number('12,50', dot), 12.5)
+        self.assertEqual(core.parse_number('1.5', comma), 1.5)
+        self.assertEqual(core.parse_number('.250', comma), 0.25)
+        # fractions and scientific notation
+        self.assertEqual(core.parse_number('1 1/2', dot), 1.5)
+        self.assertEqual(core.parse_number('3/4', dot), 0.75)
+        self.assertEqual(core.parse_number('1/0', dot), 0.0)
+        self.assertEqual(core.parse_number('1e6', dot), 1000000.0)
+        self.assertEqual(core.parse_number('1.5e-3', dot), 0.0015)
 
     def test_amount_split(self):
         self.assertEqual(core.split_amount('100km to m'), ('100', 'km to m'))
@@ -121,6 +133,15 @@ class Numbers(Base):
         self.assertEqual(core.split_amount('20 20 vision'), ('20', '20 vision'))
         self.assertEqual(core.split_amount('-25f to c'), ('-25', 'f to c'))
         self.assertIsNone(core.split_amount('km to m'))
+        self.assertEqual(core.split_amount('1 1/2 cups to ml'), ('1 1/2', 'cups to ml'))
+        self.assertEqual(core.split_amount('1/2/2026'), ('1', '/2/2026'))         # a date, not a half
+        self.assertEqual(core.split_amount('1e6 usd'), ('1e6', 'usd'))
+        self.assertEqual(core.split_amount('5em'), ('5', 'em'))
+
+    def test_clean_query(self):
+        self.assertEqual(core.clean_query('1½  Cups'), '1 1/2 cups')
+        self.assertEqual(core.clean_query('¾ cup'), '3/4 cup')
+        self.assertEqual(core.clean_query('100 Mb/s', lower=False), '100 Mb/s')
 
 
 class Units(Base):
@@ -182,11 +203,15 @@ class Units(Base):
         self.assertEqual(titles('100 in to ft'), ['8.33333333 ft', '8 ft, 4 in'])
         self.assertEqual(first('1 cup to ml'), '236.5882365 ml')                   # requested units
         self.assertEqual(first('3 tsp to tbsp'), '1 tbsp')
+        self.assertEqual(titles('1 ly to km'), ['9,460,730,472,580.8 km'])         # no float-noise row
 
     def test_ambiguous_abbreviations(self):
-        self.assertEqual(first('2 h to min'), '120 minutes')       # "h" is also a hand
+        self.assertEqual(first('2 h to min'), '120 minutes')
         self.assertEqual(first('90 m to hr'), '1.5 hours')         # "m" is also a metre
-        self.assertEqual(first('5 h to cm'), '50.8 cm')            # ...and still is when that fits
+        self.assertEqual(first('90 m to h'), '1.5 hours')          # "h" used to be a hand
+        self.assertEqual(first('5 hh to cm'), '50.8 cm')           # hands are hh now
+        self.assertEqual(first('5 hands to cm'), '50.8 cm')
+        self.assertEqual(first('1 tb to tsp'), '3 tsp')            # "tb" is a tablespoon next to a volume
         self.assertEqual(first('100 cm in in'), '39.37007874 in')  # "in" as stop word and as inch
         self.assertEqual(first('100 in cm'), '254 cm')
         self.assertEqual(first('100 cm in'), '39.37007874 in')
@@ -205,8 +230,81 @@ class Units(Base):
 
     def test_cannot_convert(self):
         self.assertEqual(first('100 km to kg'), 'Error, you can not convert from km to kg')
-        self.assertEqual(titles('100 km'), [])
-        self.assertEqual(titles('100 km to'), [])
+        self.assertEqual(titles('0 l/100km to km/l'), [])
+
+    def test_no_target(self):
+        self.assertEqual(titles('100 kg'), ['220.46226218 lb', '220 lb, 7.4 oz'])
+        self.assertEqual(titles('72 f'), ['22.22 °C'])
+        self.assertEqual(titles('20 c'), ['68 °F'])
+        self.assertEqual(first('1.3 km'), '0.80778255 mi')
+        self.assertEqual(first('100 km to'), '62.13711922 mi')           # still typing the target
+        self.assertEqual(titles('180 cm'), ['70.86614173 in', '5.90551181 ft', '5 ft, 10.87 in'])
+        self.assertEqual(titles('2 cups'), ['473.176473 ml'])            # was Cuban pesos (CUP)
+        self.assertEqual(titles('2 cup'), ['473.176473 ml'])
+        self.assertEqual(titles('12 oz'), ['340.1942775 g', '354.88235475 ml'])
+        self.assertEqual(titles('10 kn'), ['18.52 km/h', '11.50779448 mph'])  # knots, not kilonewtons
+        self.assertEqual(first('100 pounds'), '45.359237 kg')
+        self.assertEqual(first('100 mbps'), '12.5 MB/s')
+        self.assertEqual(titles('25 mpg'), ['10.62859269 km/l', '9.40858333 l/100 km'])
+
+    def test_no_target_leaves_searches_alone(self):
+        for query in ('10k', '1t', '1st', '365 days', '5 minute timer', '2 tb', '7 days to die', '12 pt of beer',
+                      '100 mg', '3 in why', '1 n'):
+            self.assertEqual(titles(query), [], query)
+        self.assertEqual(titles('12pt'), ['16px', '1em', '1rem'])         # still a font size
+        self.assertEqual(first('2 pints'), '946.352946 ml')                # the full name works
+
+    def test_default_units_setting(self):
+        self.assertEqual(first('100 lb', default_units='kg, km'), '45.359237 kg')
+        self.assertEqual(first('100 kg', default_units='kg, km'), '220.46226218 lb')   # its own kind: the other system
+        self.assertEqual(first('5 mi', default_units='kilograms, kilometres'), '8.04672 km')
+        self.assertEqual(titles('20 c', default_units='K, °F'), ['293.15 K', '68 °F'])
+        self.assertEqual(first('2 h', default_units='min'), '120 minutes')            # opting in to time
+
+    def test_several_parts(self):
+        self.assertEqual(titles('5\'11"'), ['1.8034 m', '180.34 cm'])
+        self.assertEqual(titles("5'11"), ['1.8034 m', '180.34 cm'])
+        self.assertEqual(titles('5ft11in'), ['1.8034 m', '180.34 cm'])
+        self.assertEqual(first('5 ft 11 in to cm'), '180.34 cm')
+        self.assertEqual(first('6′2″ to m'), '1.8796 m')
+        self.assertEqual(first('2 h 30 min to min'), '150 minutes')
+        self.assertEqual(first('5 lb 3 oz to kg'), '2.35301042 kg')
+        self.assertEqual(first('1 m 80 cm'), '5.90551181 ft')
+        self.assertEqual(titles('1 on 1'), [])
+
+    def test_fractions(self):
+        self.assertEqual(first('1/8 in to mm'), '3.175 mm')
+        self.assertEqual(first('3/4 cup to ml'), '177.44117738 ml')
+        self.assertEqual(first('1 1/2 cups to ml'), '354.88235475 ml')
+        self.assertEqual(first('1½ cups to ml'), '354.88235475 ml')
+        self.assertEqual(first('1e3 m to km'), '1 km')
+
+    def test_more_units(self):
+        self.assertEqual(first('100 mbps to mb/s'), '12.5 MB/s')
+        self.assertEqual(first('100 Mb/s to MB/s'), '12.5 MB/s')          # case tells bits from bytes
+        self.assertEqual(first('100 MB/s to Mbps'), '800 Mbit/s')
+        self.assertEqual(first('1 gigabit per second to megabytes per second'), '125 MB/s')
+        self.assertEqual(first('10 l/100km to km/l'), '10 km/l')
+        self.assertEqual(first('15 km/l to mpg'), '35.2821875 mpg')
+        self.assertEqual(first('1 ghz to mhz'), '1,000 MHz')
+        self.assertEqual(first('3000 rpm to rad/s'), '314.15926536 rad/s')
+        self.assertEqual(first('100 kN to lbf'), '22,480.89430997 lbf')
+        self.assertEqual(first('1 n to lbf'), '0.22480894 lbf')
+        self.assertEqual(first('9.81 m/s2 to g'), '1.00034160 g')
+        self.assertEqual(first('1 ozt to g'), '31.1034768 g')
+        self.assertEqual(first('5 carats to g'), '1 g')
+        self.assertEqual(first('1 MW to kW'), '1,000 kW')
+        self.assertEqual(first('1 gwh to mwh'), '1,000 MWh')
+        self.assertEqual(first('1 are to m2'), '100 m²')
+        self.assertEqual(first('300 ppi to ppcm'), '118.11023622 ppcm')
+        self.assertEqual(first('1 fortnight to days'), '14 days')
+        self.assertEqual(first('90 arcmin to deg'), '1.5 deg')
+        self.assertEqual(first('29.92 inhg to hpa'), '1,013.2075888 hPa')
+
+    def test_timespan(self):
+        self.assertEqual(titles('145 min to timespan'), ['2 hours, 25 minutes', '2:25:00'])
+        self.assertEqual(titles('100000 s to timespan'), ['1 day, 3 hours, 46 minutes, 40 seconds', '27:46:40'])
+        self.assertEqual(titles('100 months to years'), ['8.33333333 years', '8 years, 4 months'])
 
     def test_negative_and_leading_dot(self):
         self.assertEqual(first('0.250km to meters'), '250 m')
@@ -263,6 +361,12 @@ class Percentages(Base):
         self.assertEqual(first('40 percent of 50'), '20')
         self.assertEqual(titles('100%'), [])
         self.assertEqual(titles('1+1'), [])
+
+    def test_phrases(self):
+        self.assertEqual(titles('15% tip on 80'), ['12', '92'])
+        self.assertEqual(titles('15% decrease from 813'), ['691.05', '121.95'])
+        self.assertEqual(titles('15% increase from 813'), ['934.95', '121.95'])
+        self.assertEqual(first('20% discount on 150'), '120')
 
 
 class FontSizes(Base):
@@ -323,6 +427,30 @@ class Storage(Base):
         self.assertEqual(first('1 gib to mb'), '1,073.741824 MB')
         self.assertEqual(first('8 bit to b'), '1 B')
         self.assertEqual(first('1 kb to bit'), '8,000 bit')
+
+    def test_transfer_time(self):
+        self.assertEqual(titles('4 gb at 50 mbps'), ['10 minutes, 40 seconds', '0:10:40'])
+        self.assertEqual(first('1 tb over 100 mbps'), '22 hours, 13 minutes, 20 seconds')
+        self.assertEqual(first('700 mb @ 1 mb/s'), '11 minutes, 40 seconds')
+        self.assertEqual(titles('4 gb at 50'), [])
+
+
+class Bases(Base):
+    def test_conversions(self):
+        self.assertEqual(titles('255 to hex'), ['FF'])
+        self.assertEqual(titles('255 to binary'), ['11111111'])
+        self.assertEqual(titles('255 in octal'), ['377'])
+        self.assertEqual(titles('255 to base 7'), ['513'])
+        self.assertEqual(titles('-255 to hex'), ['-FF'])
+        self.assertEqual(titles('0xff'), ['255', '11111111', '377'])
+        self.assertEqual(titles('0b1010'), ['10', 'A', '12'])
+        self.assertEqual(titles('0xff to decimal'), ['255'])
+        self.assertEqual(ask('255 to hex')['items'][0]['mods']['cmd']['arg'], '0xFF')
+
+    def test_plain_numbers_stay_searches(self):
+        self.assertEqual(titles('255'), [])
+        self.assertEqual(titles('1e6'), [])
+        self.assertEqual(titles('255 to base 99'), [])
 
 
 class Currency(Base):
@@ -386,6 +514,22 @@ class Currency(Base):
         self.assertEqual(first('1 b idr to usd'), '62,500 USD')
         self.assertEqual(first('5 mil pesos mexicanos a usd', language='es_ES'), '250 USD')
         self.assertEqual(first('1 000 000 idr to usd'), '62.5 USD')
+        self.assertEqual(first('1 lakh mxn to usd'), '5,000 USD')
+        self.assertEqual(first('1 crore mxn to usd'), '500,000 USD')
+        self.assertEqual(first('1e6 idr to usd'), '62.5 USD')
+
+    def test_several_targets(self):
+        self.assertEqual(titles('100 usd to idr eur myr'), ['1,600,000 IDR', '90 EUR', '450 MYR'])
+        self.assertEqual(titles('100 usd to idr, eur and myr'), ['1,600,000 IDR', '90 EUR', '450 MYR'])
+        self.assertEqual(titles('100 usd idr eur'), ['1,600,000 IDR', '90 EUR'])
+        self.assertEqual(titles('100 usd to mexican pesos eur'), ['2,000 MXN', '90 EUR'])
+
+    def test_precious_metals(self):
+        self.assertEqual(first('1 xau to usd'), '2,000 USD')
+        self.assertEqual(first('1 gold to usd'), '2,000 USD')
+        self.assertEqual(first('1 oz gold to usd'), '2,000 USD')            # gold ounces are troy ounces
+        self.assertEqual(first('31.1034768 g gold to usd'), '2,000 USD')
+        self.assertEqual(first('10 grams of gold to idr'), '10,288,238.90 IDR')
 
     def test_comma_decimals(self):
         comma = {'decimal_separator': 'comma', 'number_output_format': 'dot_comma'}
@@ -428,11 +572,64 @@ class Crypto(Base):
         self.assertEqual(first('100000000 satoshis to btc'), '1 BTC')
 
     def test_ordinary_words_are_not_coins(self):
-        for query in ('5 why', '1 a', '100 km', '3 in why', '1 on 1', '20 20 vision', '2fa', '1password',
+        for query in ('5 why', '1 a', '3 in why', '1 on 1', '20 20 vision', '2fa', '1password',
                       '10 downing street', '4k video downloader', '5 minute timer', '365 days'):
             self.assertEqual(titles(query), [], query)
         self.assertEqual(first('5 why to usd'), '2.5 USD')               # spelled out, any coin works
+        self.assertEqual(first('100 km'), '62.13711922 mi')               # a distance, not the KM coin
         self.assertEqual(first('100 km to usd'), '100 USD')
+
+
+class Indonesian(Base):
+    """Indonesian words, understood on top of English ("Also understand") or as the language."""
+
+    def setUp(self):
+        self._locale = core.system_locale
+        core.system_locale = lambda: 'en_ID'                 # local currency IDR
+
+    def tearDown(self):
+        core.system_locale = self._locale
+
+    def test_amounts(self):
+        also = {'input_language': 'id_ID'}
+        self.assertEqual(titles('500rb', **also), ['31.25 USD', '625 MXN'])
+        self.assertEqual(first('1,5jt ke usd', **also), '93.75 USD')
+        self.assertEqual(titles('2 juta rupiah', **also), ['125 USD', '2,500 MXN'])
+        self.assertEqual(first('1 miliar idr to usd', **also), '62,500 USD')
+        self.assertEqual(first('100 usd ke idr', **also), '1,600,000 IDR')
+        self.assertEqual(first('10 gram emas ke usd', **also), '643.01 USD')
+        self.assertEqual(titles('500rb'), [])                         # only when Indonesian is understood
+
+    def test_units_and_percentages(self):
+        also = {'input_language': 'id_ID'}
+        self.assertEqual(titles('5 ons', **also), ['500 g'])
+        self.assertEqual(first('2 kuintal', **also), '200 kg')
+        self.assertEqual(first('1 tumbak', **also), '14 m²')
+        self.assertEqual(first('3 bata', **also), '42 m²')
+        self.assertEqual(first('2 hektar ke m2', **also), '20,000 m²')
+        self.assertEqual(first('5 km ke m', **also), '5,000 m')
+        self.assertEqual(first('15% dari 50', **also), '7.5')
+        self.assertEqual(titles('20% diskon 150', **also), ['120', '30'])
+
+    def test_dates(self):
+        also = {'input_language': 'id_ID'}
+        self.assertEqual(when('besok', **also)[0], '14 November, 2026, 8:15:00 pm')
+        self.assertEqual(when('31 desember 2026', **also)[0], '31 December, 2026, 12:00:00 am')
+        self.assertEqual(when('hari sampai 31 desember', **also), ['48 days'])
+        self.assertEqual(when('hari minggu', **also)[0], '15 November, 2026, 12:00:00 am')
+        self.assertEqual(when('3 hari lalu', **also)[0], '10 November, 2026, 8:15:00 pm')
+
+    def test_as_the_language(self):
+        self.assertEqual(first('10 hari ke jam', language='id_ID'), '240 jam')
+        self.assertEqual(first('100 km ke kg', language='id_ID'), 'Tidak bisa mengubah km ke kg')
+        self.assertEqual(when('31 desember 2026', language='id_ID')[0], '31 Desember, 2026, 12:00:00 am')
+
+    def test_automatic(self):
+        for locale, expected in (('en_ID', ['id_ID']), ('id_ID', ['id_ID']), ('es_MX', ['es_ES']), ('en_US', [])):
+            settings = core.Settings({})
+            settings._locale = locale
+            self.assertEqual(settings.input_languages, expected, locale)
+        self.assertEqual(core.Settings({'input_language': 'none'}).input_languages, [])
 
 
 class RateStates(unittest.TestCase):
@@ -581,6 +778,18 @@ class Dates(Base):
                                     '2021-12-31T18:05:09+07:00', '1640948709'])
         self.assertEqual(when('1 march 2021', date_format='l j F', language='sv_SE')[0], 'måndag 1 mars')
 
+    def test_weeks_and_time_left(self):
+        self.assertEqual(when('monday in 3 weeks')[0], '7 December, 2026, 12:00:00 am')
+        self.assertEqual(when('in 3 days')[0], '16 November, 2026, 8:15:00 pm')
+        self.assertEqual(when('week 44 2026')[0], '26 October – 1 November 2026')
+        self.assertEqual(when('week')[0], '9 November – 15 November 2026')
+        self.assertEqual(when('week 53 2026')[0], '28 December 2026 – 3 January 2027')
+        self.assertEqual(when('days left in this month'), ['17 days'])
+        self.assertEqual(when('workdays left in this month'), ['11 workdays'])
+        self.assertEqual(when('days until end of month'), ['17 days'])
+        self.assertEqual(when('workdays until 31 december'), ['34 workdays'])
+        self.assertEqual(when('week 60 2026'), ['...'])
+
     def test_invalid(self):
         self.assertEqual(when('garbage words'), ['...'])
         self.assertEqual(when('31 foo 2021'), ['...'])
@@ -653,6 +862,12 @@ class Selection(Base):
         self.assertEqual(first('rgb(255, 102, 0)', 'any'), '#ff6600')
         self.assertEqual(first('1577836800', 'any'), '1 January, 2020, 7:00:00 am')
 
+    def test_symbol_keywords(self):
+        self.assertEqual(titles('$25', 'symbol', base_currencies='MXN'), ['500 MXN'])
+        self.assertEqual(first('€100 to usd', 'symbol'), '111.11 USD')
+        self.assertEqual(titles('$', 'symbol'), [])                      # no hints: an ordinary search
+        self.assertEqual(titles('$ hello', 'symbol'), [])
+
     def test_hints(self):
         self.assertEqual(first('1.500.000', 'any'), 'Add a unit or currency after the number')
         self.assertEqual(first('hello world', 'any'), "Calculate Anything can't read this")
@@ -669,7 +884,7 @@ class Dispatch(Base):
         copy = next(o['uid'] for o in outputs if not o['config']['autopaste'])
         paste = next(o['uid'] for o in outputs if o['config']['autopaste'])
         filters = [o for o in objects if o['type'] == 'alfred.workflow.input.scriptfilter']
-        self.assertEqual(len(filters), 16)
+        self.assertEqual(len(filters), 20)
         for item in filters:
             links = set((c['destinationuid'], c['modifiers']) for c in plist['connections'][item['uid']])
             self.assertEqual(links, {(copy, 0), (copy, 1048576), (copy, 524288), (paste, 262144)},
@@ -678,13 +893,17 @@ class Dispatch(Base):
         for kind in ('universalaction', 'hotkey'):
             trigger = next(o['uid'] for o in objects if o['type'].endswith(kind))
             self.assertEqual([c['destinationuid'] for c in plist['connections'][trigger]], [calc])
+        for symbol in ('$', '€', '£', '¥'):
+            script = next(f['config']['script'] for f in filters if f['config']['keyword'] == symbol)
+            self.assertIn('--symbol "%s$1"' % ('\\$' if symbol == '$' else symbol), script)
         keywords = dict((f['variable'], f['config']['default']) for f in plist['userconfigurationconfig']
                         if f['variable'].startswith('keyword_'))
         self.assertEqual(keywords, {'keyword_time': 'time', 'keyword_vat': 'vat', 'keyword_color': 'color',
                                     'keyword_calc': 'calc'})
 
     def test_every_reply_is_valid_alfred_json(self):
-        for query in ('100 usd to mxn', '100 km to m', '12px', '120 + 30%', '2 gb to mb', '400 + vat', 'zzz', ''):
+        for query in ('100 usd to mxn', '100 km to m', '12px', '120 + 30%', '2 gb to mb', '400 + vat', 'zzz', '',
+                      '100 kg', '0xff', '4 gb at 50 mbps', '145 min to timespan', '100 usd to idr eur'):
             reply = ask(query)
             json.dumps(reply)
             for row in reply['items']:

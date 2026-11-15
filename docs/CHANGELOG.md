@@ -4,7 +4,21 @@
 
 - ⌃ Return pastes a result into the app you were using.
 - Convert selected text from any app: the **Calculate Anything** Universal Action, an optional hotkey, and a new `calc` keyword that reads amounts written symbol first (`$25`, `Rp 1.500.000`, `USD 100 to IDR`), colors and Unix timestamps.
-- Numbers that can only be read one way are read that way: `1.500.000` is one and a half million and `1.500,50` is 1500.5, whatever the decimal-separator setting.
+- Numbers that can only be read one way are read that way: `1.500.000` is one and a half million and `1.500,50` is 1500.5, whatever the decimal-separator setting. So is a single comma or dot not followed by three digits: `1,5` is one and a half.
+- A unit with no target converts to the other measurement system: `100 kg`, `72 f`, `180 cm`, `2 cups`, `12 oz`. Choose your own targets in the new **Default units** setting. Searches such as `10k`, `1st`, `12pt` and `365 days` stay untouched.
+- Several parts and fractions: `5'11"`, `5 ft 11 in to cm`, `2 h 30 min to min`, `1/8 in to mm`, `1 1/2 cups to ml`, `¾ cup`.
+- Indonesian: results in Bahasa Indonesia, and Indonesian words with English results through the new **Also understand** setting, which a Mac set to Indonesia turns on by itself: `500rb`, `1,5jt ke usd`, `2 juta rupiah`, `5 ons`, `1 tumbak`, `2 hektar ke m2`, `time besok`, `time 31 desember 2026`.
+- Several target currencies at once: `100 usd to idr eur myr`.
+- Gold, silver, platinum and palladium, per troy ounce or by weight: `1 gold to usd`, `10 g gold to idr`.
+- `$`, `€`, `£` and `¥` can start a query typed without a keyword: `$100 to idr`.
+- New units: data rates (`100 mbps to mb/s`), fuel economy (`km/l`, `l/100km`, `mpg`), frequency (`Hz` to `THz`, `rpm`), force (`N`, `kN`, `lbf`, `kgf`), acceleration (`m/s²`, `g`), troy ounces, carats, micrograms, centilitres, decilitres, furlongs, fathoms, ares, `MW`, `GW`, `GWh`, `TWh`, `eV`, `BTU/h`, inches of mercury, arcminutes, arcseconds, revolutions, gradians, fortnights, `ppi`, and Indonesia's `ons`, `kuintal` and `tumbak`.
+- Transfer times: `4 gb at 50 mbps` gives 10 minutes, 40 seconds.
+- Durations written out: `145 min to timespan` gives 2 hours, 25 minutes and 2:25:00; `100 months to years` adds 8 years, 4 months.
+- Number bases: `255 to hex`, `255 to binary`, `255 to base 7`, `0xff`.
+- Percentages: `15% tip on 80`, `15% increase from 813`, `15% decrease from 813`, `20% discount on 150`.
+- Dates: `time monday in 3 weeks`, `time in 2 hours`, `time week 44 2026`, `time days left in this month`, `time workdays until 31 december`, `time days until end of month`.
+- Money multipliers `lakh` and `crore`, and scientific notation (`1e6 idr to usd`).
+- Fixed: `2 cups` converted Cuban pesos; `90 m to h` converted metres to hands (`h` is now always an hour, and hands are `hh`); `1 ly to km` added a second row of float noise.
 
 ## 5.0.2 (2026-11-15)
 

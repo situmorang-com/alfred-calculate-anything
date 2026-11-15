@@ -16,6 +16,10 @@ DEFAULT_LANG = 'en_EN'
 # Regions whose everyday numeric dates put the month first (01/02 = January 2nd).
 MONTH_FIRST_REGIONS = frozenset(['US', 'AS', 'GU', 'MP', 'PR', 'UM', 'VI', 'PH', 'FM', 'MH', 'PW'])
 
+# "Also understand" on Automatic: the words of the Mac's language, or of its region's.
+INPUT_LANGUAGES = {'id': 'id_ID', 'es': 'es_ES', 'sv': 'sv_SE'}
+INPUT_LANGUAGES_BY_REGION = {'ID': 'id_ID'}
+
 
 # --------------------------------------------------------------------------- paths
 
@@ -68,22 +72,29 @@ def strip_accents(text):
 
 
 _SPACES = re.compile(r'\s+')
+_VULGAR = {'\u00bd': '1/2', '\u2153': '1/3', '\u2154': '2/3', '\u00bc': '1/4', '\u00be': '3/4',
+           '\u2155': '1/5', '\u2156': '2/5', '\u2157': '3/5', '\u2158': '4/5', '\u2159': '1/6',
+           '\u215a': '5/6', '\u215b': '1/8', '\u215c': '3/8', '\u215d': '5/8', '\u215e': '7/8'}
+_VULGAR_RE = re.compile('(\\d?) ?([%s])' % ''.join(_VULGAR))
 
 
-def clean_query(query):
+def clean_query(query, lower=True):
     """Normalise what the user typed: composed Unicode, single spaces, lower case.
 
     Alfred hands over decomposed characters (n + combining tilde), which would never
     match the keyword files, so composing first matters for every non-English word.
+    Fraction characters become fractions ("1\u00bd" -> "1 1/2"). `lower=False` keeps the
+    case, which is all that tells bits from bytes in "Mb/s" and "MB/s".
     """
     if not query:
         return ''
     text = nfc(query)
-    text = text.replace('µ', 'μ')              # micro sign -> Greek mu (as in "μm")
-    text = text.replace('²', '2').replace('³', '3')  # m² -> m2, m³ -> m3
-    text = text.replace(' ', ' ').replace(' ', ' ')
+    text = text.replace('\u00b5', '\u03bc')                  # micro sign -> Greek mu (as in "\u03bcm")
+    text = text.replace('\u00b2', '2').replace('\u00b3', '3')  # m\u00b2 -> m2, m\u00b3 -> m3
+    text = text.replace('\u00a0', ' ').replace('\u202f', ' ').replace('\u2044', '/')
+    text = _VULGAR_RE.sub(lambda m: (m.group(1) + ' ' if m.group(1) else '') + _VULGAR[m.group(2)], text)
     text = _SPACES.sub(' ', text).strip()
-    return text.lower()
+    return text.lower() if lower else text
 
 
 # --------------------------------------------------------------------------- settings
@@ -133,6 +144,8 @@ class Settings(object):
         formats = [part.strip() for part in get('date_format', 'j F, Y, g:i:s a').split('|')]
         self.date_formats = [part for part in formats if part] or ['j F, Y, g:i:s a']
         self.date_order = get('date_order', 'auto')
+        self.default_units = get('default_units', '')
+        self.input_language = get('input_language', 'auto')
         self._locale = None
         self._timezone = None
         self._base_currencies = None
@@ -186,6 +199,19 @@ class Settings(object):
         return self._base_currencies
 
     @property
+    def input_languages(self):
+        """Languages whose words are understood on top of the display language: the
+        "Also understand" setting, which by default follows this Mac's language and region."""
+        choice = self.input_language
+        if choice == 'none':
+            return []
+        if choice != 'auto':
+            return [choice]
+        language = re.split(r'[_-]', self.locale or '')[0].lower()
+        code = INPUT_LANGUAGES.get(language) or INPUT_LANGUAGES_BY_REGION.get(self.region)
+        return [code] if code else []
+
+    @property
     def month_first(self):
         """How to read 01/02/2026: True means January 2nd, False means 1 February."""
         if self.date_order == 'mdy':
@@ -235,12 +261,14 @@ class Lang(object):
 
     lang/<code>.json       what the workflow says
     lang/<code>-keys.json  what the user may type ("kilometers" -> "km", stop words)
-    English is always loaded underneath, so a partial translation still works, and a
-    custom-keys.json in the workflow's data folder is layered on top so personal
-    keywords survive workflow updates.
+    English is always loaded underneath, so a partial translation still works. The words
+    of the `extra` languages ("Also understand") come next, so "500rb" and "ke" work with
+    English results; their month and weekday names are in `input_strings`. A
+    custom-keys.json in the workflow's data folder is layered on top so personal keywords
+    survive workflow updates.
     """
 
-    def __init__(self, code):
+    def __init__(self, code, extra=()):
         base = load_json(bundled('lang', DEFAULT_LANG + '.json')) or {}
         base_keys = load_json(bundled('lang', DEFAULT_LANG + '-keys.json')) or {}
         strings, keys = base, base_keys
@@ -253,10 +281,21 @@ class Lang(object):
                 code = DEFAULT_LANG
             if isinstance(own_keys, dict) and own_keys:
                 keys = self._merge_keys(own_keys, base_keys)
+        code = code or DEFAULT_LANG
+        self.input_strings = []
+        for other in extra or ():
+            if not other or other == code or other == DEFAULT_LANG:
+                continue
+            other_keys = load_json(bundled('lang', other + '-keys.json'))
+            if isinstance(other_keys, dict) and other_keys:
+                keys = self._merge_keys(keys, other_keys)
+            other_strings = load_json(bundled('lang', other + '.json'))
+            if isinstance(other_strings, dict) and other_strings:
+                self.input_strings.append(other_strings)
         custom = load_json(os.path.join(data_dir(), 'custom-keys.json'))
         if isinstance(custom, dict) and custom:
             keys = self._merge_keys(custom, keys)
-        self.code = code or DEFAULT_LANG
+        self.code = code
         self.strings = strings
         self.keys = keys
         self._keyword_cache = {}
@@ -346,21 +385,42 @@ def lookup(table, term):
 
 # --------------------------------------------------------------------------- numbers
 
+_FRACTION = re.compile(r'^(?:(\d+)\s+)?(\d+)/(\d+)$')
+_EXPONENT = re.compile(r'^(.*\d)e([-+]?\d+)$', re.I)
+
+
 def parse_number(text, settings):
-    """"1,350.50" / "1 350,50" / "1.500.000" -> float.
+    """"1,350.50" / "1 350,50" / "1.500.000" / "1 1/2" / "1e6" -> float.
 
     The decimal-separator setting decides a number that reads two ways ("1,500"). A number
     that reads only one way is read that way: a mark used twice groups thousands
-    ("1.500.000"), and when both marks appear the last one is the decimal point ("1.500,50").
+    ("1.500.000"), when both marks appear the last one is the decimal point ("1.500,50"),
+    and a single mark not followed by exactly three digits is a decimal point ("1,5", "12.50").
     """
-    raw = str(text).strip().replace(' ', '').replace(' ', '')
+    raw = str(text).strip()
     sign = -1.0 if raw.startswith('-') else 1.0
-    raw = raw.lstrip('+-')
+    raw = raw.lstrip('+-').strip()
+    fraction = _FRACTION.match(raw)
+    if fraction:
+        whole, top, bottom = fraction.groups()
+        if not int(bottom):
+            return 0.0
+        return sign * (int(whole or 0) + int(top) / float(int(bottom)))
+    exponent = ''
+    scientific = _EXPONENT.match(raw)
+    if scientific:
+        raw, exponent = scientific.group(1), 'e' + scientific.group(2)
+    raw = raw.replace(' ', '').replace('\u00a0', '').replace('\u202f', '')
     point = ',' if (settings is not None and settings.decimal_separator == 'comma') else '.'
     if '.' in raw and ',' in raw:
         point = '.' if raw.rfind('.') > raw.rfind(',') else ','
     elif raw.count(point) > 1:
         point = ',' if point == '.' else '.'
+    elif raw.count('.') + raw.count(',') == 1:
+        mark = '.' if '.' in raw else ','
+        before, after = raw.split(mark)
+        if len(after) != 3 or not before:
+            point = mark                    # "1,5" and "12.50" cannot be thousands
     raw = raw.replace(',' if point == '.' else '.', '')
     if point == ',':
         raw = raw.replace(',', '.')
@@ -369,7 +429,7 @@ def parse_number(text, settings):
     if digits in ('', '.'):
         return 0.0
     try:
-        return sign * float(digits)
+        return sign * float(digits + exponent)
     except ValueError:
         return 0.0
 
@@ -465,10 +525,12 @@ def plain_number(value, decimals=-1):
 
 # --------------------------------------------------------------------------- query pieces
 
-# A number as typed: 1350.5, 1,350.50, 1.350,50, .5 and, with spaces, only real thousands
+# A number as typed: 1350.5, 1,350.50, 1.350,50, .5, 1e6 and, with spaces, only real thousands
 # groups (1 350 or 10 000.5) so "20 20 vision" is not read as 2020.
-NUMBER = r'(?:\d{1,3}(?: \d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)*|[.,]\d+)'
-_AMOUNT = re.compile(r'^(?P<sign>[-+]?)\s*(?P<num>%s)' % NUMBER)
+NUMBER = r'(?:\d{1,3}(?: \d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)*(?:e[-+]?\d+)?|[.,]\d+)'
+# A fraction, alone or after a whole number: 3/4, 1 1/2. Never part of a date such as 1/2/2026.
+FRACTION_NUMBER = r'(?:\d+ )?\d+/\d+(?![\d/])'
+_AMOUNT = re.compile(r'^(?P<sign>[-+]?)\s*(?P<num>%s|%s)' % (FRACTION_NUMBER, NUMBER))
 
 
 def split_amount(query):
@@ -545,12 +607,22 @@ class Context(object):
 
     def __init__(self, environ=None):
         self.settings = Settings(environ)
-        self.lang = Lang(self.settings.language)
+        self.lang = Lang(self.settings.language, self.settings.input_languages)
         self.rerun = None
         self.variables = {}
+        self.typed = ''              # the query with its case, when a calculator needs it
 
     def text(self, section, key, default=''):
         return self.lang.text(section, key, default)
+
+    def cased(self, term, last=False):
+        """`term` (lower case) as the user typed it; `last` looks from the end of the query."""
+        typed = self.typed
+        lowered = typed.lower()
+        if not term or len(lowered) != len(typed):
+            return term
+        position = lowered.rfind(term) if last else lowered.find(term)
+        return typed[position:position + len(term)] if position >= 0 else term
 
     def fmt(self, value, decimals=-1):
         return format_number(value, decimals, self.settings)

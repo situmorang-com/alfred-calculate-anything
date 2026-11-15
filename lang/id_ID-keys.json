@@ -1,0 +1,174 @@
+{
+  "units": {
+    "jam": "hr",
+    "menit": "min",
+    "detik": "s",
+    "hari": "day",
+    "minggu": "week",
+    "bulan": "month",
+    "tahun": "year",
+    "dekade": "decade",
+    "abad": "century",
+    "sentimeter": "cm",
+    "milimeter": "mm",
+    "inci": "in",
+    "kaki": "ft",
+    "mil": "mi",
+    "mil laut": "nmi",
+    "meter persegi": "m2",
+    "kilometer persegi": "km2",
+    "sentimeter persegi": "cm2",
+    "kaki persegi": "ft2",
+    "hektar": "ha",
+    "hektare": "ha",
+    "bata": "tumbak",
+    "ru": "tumbak",
+    "ubin": "tumbak",
+    "mililiter": "ml",
+    "meter kubik": "m3",
+    "kubik": "m3",
+    "galon": "gal",
+    "cangkir": "cup",
+    "sendok makan": "tbsp",
+    "sdm": "tbsp",
+    "sendok teh": "tsp",
+    "sdt": "tsp",
+    "miligram": "mg",
+    "kwintal": "kuintal",
+    "derajat celsius": "c",
+    "derajat fahrenheit": "f",
+    "derajat": "deg",
+    "km/jam": "kph",
+    "kilometer per jam": "kph",
+    "mil per jam": "mph",
+    "meter per detik": "mps",
+    "kalori": "cal",
+    "kilokalori": "kcal",
+    "tenaga kuda": "hp",
+    "daya kuda": "hp",
+    "km per liter": "km/l",
+    "liter per 100 km": "l/100km",
+    "durasi": "timespan",
+    "stop_words": [
+      "ke",
+      "jadi",
+      "dalam"
+    ]
+  },
+  "datastorage": {
+    "stop_words": [
+      "ke",
+      "jadi",
+      "dalam"
+    ]
+  },
+  "time": {
+    "sekarang": "now",
+    "hari ini": "today",
+    "besok": "+1 day",
+    "kemarin": "-1 day",
+    "lusa": "+2 days",
+    "tambah": "+",
+    "kurang": "-",
+    "yang lalu": "ago",
+    "lalu": "ago",
+    "minggu depan": "next week",
+    "bulan depan": "next month",
+    "tahun depan": "next year",
+    "minggu lalu": "last week",
+    "bulan lalu": "last month",
+    "tahun lalu": "last year",
+    "hari minggu": "sunday",
+    "hari kerja": "weekdays",
+    "until": [
+      "sampai",
+      "hingga"
+    ],
+    "since": [
+      "sejak"
+    ],
+    "between": [
+      "antara"
+    ],
+    "start of": [
+      "awal"
+    ],
+    "end of": [
+      "akhir"
+    ],
+    "stop_words": [
+      "ke",
+      "dalam"
+    ]
+  },
+  "currency": {
+    "rupiah": "IDR",
+    "dolar": "USD",
+    "dolar as": "USD",
+    "dolar amerika": "USD",
+    "dolar singapura": "SGD",
+    "dolar australia": "AUD",
+    "dolar hong kong": "HKD",
+    "emas": "XAU",
+    "perak": "XAG",
+    "stop_words": [
+      "ke",
+      "jadi",
+      "dalam"
+    ]
+  },
+  "crypto_currency": {
+    "stop_words": [
+      "ke",
+      "jadi",
+      "dalam"
+    ]
+  },
+  "percentage": {
+    "tambah": "+",
+    "kurang": "-",
+    "persen": "%",
+    "diskon": "off",
+    "potongan": "off",
+    "sebagai % dari": "%",
+    "berapa % dari": "%",
+    "adalah berapa % dari": "%",
+    "stop_words": [
+      "dari"
+    ]
+  },
+  "vat": {
+    "tambah": "+",
+    "kurang": "-",
+    "pajak": "VAT",
+    "stop_words": [
+      "dari"
+    ]
+  },
+  "color": {
+    "stop_words": [
+      "ke",
+      "jadi"
+    ]
+  },
+  "multipliers": {
+    "ribu": 1000.0,
+    "rb": 1000.0,
+    "juta": 1000000.0,
+    "jt": 1000000.0,
+    "miliar": 1000000000.0,
+    "milyar": 1000000000.0,
+    "triliun": 1000000000000.0,
+    "trilyun": 1000000000000.0,
+    "local_currency": [
+      "ribu",
+      "rb",
+      "juta",
+      "jt",
+      "miliar",
+      "milyar",
+      "triliun",
+      "trilyun"
+    ]
+  }
+}

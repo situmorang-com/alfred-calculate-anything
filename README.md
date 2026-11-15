@@ -33,6 +33,9 @@ Alfred picks the workflow up at once. To update it later, run `git pull` in that
 100€ to $                 100 ¥ in €
 100 eur                   converts to your base currencies
 150k idr to usd           2.5 million yen to eur     (k, m, b, t or the words)
+100 usd to idr eur myr    several targets at once
+$100 to idr               €50                        ($ € £ ¥ first, no keyword)
+1 gold to usd             10 g gold to idr           (gold and silver)
 ```
 
 Around 170 currencies by code (`idr`), by symbol (`Rp`, `RM`, `€`, `£`, `¥`, `$`) or by name (`rupiah`, `ringgit`, `pounds`, `swiss francs`). With no target, the amount is converted to the base currencies from the configuration; left empty, that is this Mac's local currency plus USD, EUR and MYR.
@@ -53,14 +56,19 @@ About 1,900 coins by ticker or name. A regular currency wins over a coin with th
 100 kilometers to meters     100 km m          100oz = kg
 -25F to C                    4500 ft2 to m2    100 ml to oz
 10 years to months           1hr s             100 in to ft   (also shows 8 ft, 4 in)
+100 kg                       72 f              180 cm         (no target: the other system)
+5'11"                        5 ft 11 in to cm  1 1/2 cups to ml
+100 mbps to mb/s             15 km/l to mpg    1 ghz to mhz
+145 min to timespan          100 kn to lbf     9.81 m/s2 to g
 ```
 
-Length, area, volume, weight, speed, rotation, temperature, pressure, time, energy and power. Use the abbreviation or the name, singular or plural.
+Length, area, volume, weight, speed, angles, temperature, pressure, time, energy, power, frequency, force, acceleration, fuel economy, data rates and screen density. Use the abbreviation or the name, singular or plural. A unit typed alone converts to the other measurement system, or to your **Default units**.
 
 ### Data storage
 
 ```
 100 gigabytes in megabytes    2 gb to mb    400MiB to kib    1b kb
+4 gb at 50 mbps               how long the transfer takes
 ```
 
 Follows the IEC standard: 1 MB = 1000 kB and 1 MiB = 1024 KiB. Turn on **Binary mode** in the configuration if you want 1 MB = 1024 kB.
@@ -74,6 +82,13 @@ Follows the IEC standard: 1 MB = 1000 kB and 1 MiB = 1024 KiB. Turn on **Binary 
 40 as a % of 50    40 is 80% of 50, plus the increase and decrease between the two
 30 % 40            the same, short form
 20% off 150        120
+15% tip on 80      12 (and 92 with the tip)
+```
+
+### Number bases
+
+```
+255 to hex         255 to binary      255 to base 7      0xff
 ```
 
 ### px, em, rem, pt
@@ -101,6 +116,8 @@ time start of year                    time end of 2021            time end of ne
 time 31 December, 2021 18:00:00       time 31/12/2021 18:00
 time 25 December, 2021 - 31 December, 2021
 time 3pm utc                          time now in tokyo
+time monday in 3 weeks                time week 44 2026
+time days left in this month          time workdays until 31 december
 ```
 
 Each result is shown in every date format you configure, followed by how far away it is and its Unix timestamp. A zone after the time (`3pm utc`, `10:00 est`, `09:00 +09:00`) says where that time is, and the answer is in your zone. `in tokyo` shows the answer in that zone instead.
@@ -114,6 +131,16 @@ color tomato to cmyk           color hsl(24, 100%, 50%) to oklch
 ```
 
 Reads hex, rgb(a), hsl(a), hwb, hsv, cmyk, lab, oklch and CSS color names.
+
+### Bahasa Indonesia
+
+```
+500rb             1,5jt ke usd       2 juta rupiah       100 usd ke idr
+5 ons             1 tumbak           2 hektar ke m2      15% dari 50
+time besok        time 31 desember 2026                  time hari sampai 31 desember
+```
+
+Indonesian words work alongside English on a Mac set to Indonesia (the **Also understand** setting), and the results can be in Indonesian too (**Language**). `500rb` with no currency means rupiah.
 
 ## On a result
 

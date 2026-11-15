@@ -2,7 +2,7 @@
 
 | | |
 | --- | --- |
-| Status | v5.0.2, installed and in daily use since 2026-11-15 |
+| Status | v5.0.2 released and in daily use since 2026-11-15; the 2026-11-16 features (unit defaults, Indonesian, several targets, more units, number bases) are on `main`, unreleased |
 | Owner | Edmund Situmorang |
 | Based on | [biati-digital/alfred-calculate-anything](https://github.com/biati-digital/alfred-calculate-anything) 4.0.7 (MIT, archived in 2024) |
 
@@ -39,10 +39,12 @@ What users type for each feature, with examples, is in `docs/MANUAL.md`. These a
 
 ### Currency (C)
 
-- C1. About 170 ISO currencies, recognised by code (`idr`), symbol (`Rp`, `€`, `RM`), name (`rupiah`, `swiss francs`) or keyword-file word, in English and the configured language.
-- C2. `<amount> <from> [to|in|as|=] <to>`, with or without spaces (`100usd yen`). Thousands may be grouped with commas, dots or spaces; only a number that reads two ways (`1,500`) follows the decimal-separator setting.
+- C1. About 170 ISO currencies, plus gold, silver, platinum and palladium per troy ounce, recognised by code (`idr`, `xau`), symbol (`Rp`, `€`, `RM`), name (`rupiah`, `swiss francs`, `gold`) or keyword-file word, in English, the configured language and the "Also understand" language.
+- C2. `<amount> <from> [to|in|as|=] <to>`, with or without spaces (`100usd yen`), and several targets at once (`100 usd to idr eur myr`). Thousands may be grouped with commas, dots or spaces; only a number that reads two ways (`1,500`) follows the decimal-separator setting. Scientific notation works (`1e6`).
 - C3. With no target, convert to the base-currencies setting; empty means this Mac's local currency, then USD, EUR and MYR (MYR at the owner's request). A currency is never converted to itself.
-- C4. Amount multipliers: `k`, `m`, `b`, `t`, `thousand`, `million`, `billion`, `trillion`, and the Spanish and Swedish words.
+- C4. Amount multipliers: `k`, `m`, `b`, `t`, `thousand`, `million`, `billion`, `trillion`, `lakh`, `crore`, and the Indonesian, Spanish and Swedish words. Indonesian shorthand with no currency (`500rb`, `1,5jt ke usd`) is in the local currency.
+- C8. Precious metals by weight: `10 g gold to idr`; an ounce of metal is a troy ounce.
+- C9. `$`, `€`, `£` and `¥` may start a query typed with no keyword (`$100 to idr`).
 - C5. Rates come from free public sources tried in order; an optional Fixer key is tried first.
 - C6. A query never waits for the network. It answers from the cache, which refreshes in the background, by default every 6 hours. Each row says how old its rate is.
 - C7. Rows show a flag. Return copies the formatted total, ⌘ Return the plain number, ⌥ Return the rate for one unit.
@@ -57,24 +59,32 @@ What users type for each feature, with examples, is in `docs/MANUAL.md`. These a
 
 ### Units (U)
 
-- U1. Length, area, volume, weight, speed, rotation, temperature, pressure, time, energy and power, by abbreviation, name, plural or keyword-file word.
-- U2. An ambiguous abbreviation takes the reading that converts: `2 h to min` is hours, `5 h to cm` is hands, `100 ml to oz` is fluid ounces.
-- U3. A second row in mixed units where it helps (`8 ft, 4 in`), and only when the remainder is a real fraction of the larger unit.
+- U1. Length, area, volume, weight, speed, angles, temperature, pressure, time, energy, power, frequency and rotation speed, force, acceleration, fuel economy, data rates and screen density, by abbreviation, name, plural or keyword-file word. Indonesian units: `ons`, `kuintal`, `are`, `tumbak` (`bata`, `ru`; 14 m²), `hektar`.
+- U2. An ambiguous abbreviation takes the reading that converts: `90 m to h` is minutes, `100 ml to oz` is fluid ounces, `1 tb to tsp` tablespoons, `9.81 m/s2 to g` standard gravity. `h` is always an hour (hands are `hh`). Bits and bytes follow the case (`Mb/s`, `MB/s`; all lower case, `mbps` bits and `mb/s` bytes).
+- U3. A second row in mixed units where it helps (`8 ft, 4 in`), and only when the remainder is a real fraction of the larger unit that the float can still hold (`1 ly to km` gets none).
 - U4. Converting between categories shows an error row.
+- U5. A unit with no target (`100 kg`, `72 f`) converts to the Default units setting's unit of that kind, else to the other measurement system. Time, angles, frequency and one-system units give nothing, and so do `k`, `t`, `st`, `pt` and `n` typed alone, so ordinary searches stay quiet (`10k`, `1st`, `12pt`, `365 days`).
+- U6. Several parts of one kind add up (`5'11"`, `5 ft 11 in`, `2 h 30 min to min`), and amounts may be fractions (`1/8 in`, `1 1/2 cups`, `¾ cup`).
+- U7. A time converted to `timespan` is written out and as h:mm:ss (`145 min to timespan`).
 
 ### Data storage (D)
 
 - D1. Bits, bytes up to yottabytes, and the binary units KiB to YiB.
 - D2. IEC by default (1 MB = 1000 kB). A setting makes the decimal names binary.
+- D3. `<size> at <rate>` (also `over`, `@`) gives the transfer time: `4 gb at 50 mbps`.
 
 ### Percentages (P)
 
-- P1. `120 + 30%`, `120 - 30%`, `15% of 50`, `40 as a % of 50`, `30 % 40`, `20% off 150`, and their words in each language.
+- P1. `120 + 30%`, `120 - 30%`, `15% of 50`, `40 as a % of 50`, `30 % 40`, `20% off 150`, `15% tip on 80`, `15% increase from 813`, `15% decrease from 813`, and their words in each language.
 - P2. Input follows the decimal-separator setting; output follows the number-format setting.
 
 ### CSS sizes (X)
 
 - X1. px, em, rem and pt. With no target, all three others. The base comes from the settings or from `base 17px` in the query.
+
+### Number bases (B)
+
+- B1. `255 to hex`, `to binary`, `to octal`, `to decimal`, `to base 2` to `base 36`; `0x`, `0b` and `0o` numbers show the other bases. A plain number with no target stays an ordinary search.
 
 ### VAT (V)
 
@@ -83,7 +93,7 @@ What users type for each feature, with examples, is in `docs/MANUAL.md`. These a
 
 ### Time (T)
 
-- T1. The `time` keyword: now; Unix timestamps in seconds or milliseconds; relative expressions (`+15 days`, `3 days ago`, `next friday 3pm`, workdays); `<unit> until|since <date>`; `start of` and `end of` a year, month, week, day, named month or year; absolute dates in common formats; the difference between two dates.
+- T1. The `time` keyword: now; Unix timestamps in seconds or milliseconds; relative expressions (`+15 days`, `3 days ago`, `next friday 3pm`, `monday in 3 weeks`, workdays); `<unit> until|since <date>`, including workdays and a start or end (`days until end of month`); `<unit> left in <period>`; ISO weeks (`week 44 2026`); `start of` and `end of` a year, month, week, day, named month or year; absolute dates in common formats; the difference between two dates.
 - T2. Time zones. A zone after a time says where that time is (`3pm utc`); `in <zone>` shows the answer there (`now in tokyo`). Accepts abbreviations, IANA city names and UTC offsets.
 - T3. Each result in every configured date format (PHP `date()` letters), then the timespan from now, then the Unix timestamp.
 - T4. Ambiguous slash dates follow the date-order setting, by default this Mac's region. A reading with an impossible month flips.
@@ -94,7 +104,7 @@ What users type for each feature, with examples, is in `docs/MANUAL.md`. These a
 
 ### General (G)
 
-- G1. English, Spanish and Swedish for results and typed words; English words work in every language. Personal words in `custom-keys.json` in the workflow's data folder survive updates.
+- G1. English, Indonesian, Spanish and Swedish for results and typed words; English words work in every language. "Also understand" adds one more language's words, by default the Mac's (Indonesian on a Mac set to Indonesia). Personal words in `custom-keys.json` in the workflow's data folder survive updates.
 - G2. Settings live in Alfred's Configure Workflow panel (see `docs/MANUAL.md`), including the four keywords.
 - G3. `_caclear` deletes the cached rates.
 - G4. ⌃ Return pastes a result into the app the user was in.
@@ -112,7 +122,7 @@ What users type for each feature, with examples, is in `docs/MANUAL.md`. These a
 
 ## Acceptance
 
-- `tests/test_calculate.py` passes on `/usr/bin/python3` and on Homebrew's `python3`. It covers every example in the 4.0.7 README, the upstream `tests.txt`, the reported bugs above, the rate-cache states, dates against a pinned clock, and colors.
+- `tests/test_calculate.py` passes on `/usr/bin/python3` and on Homebrew's `python3`. It covers every example in the 4.0.7 README, the upstream `tests.txt`, the reported bugs above, the rate-cache states, dates against a pinned clock, colors, and the 2026-11-16 features.
 - Each feature has been checked once in Alfred itself; the latest results are in `docs/MEMORY.md`, "Status".
 
 ## Open questions
@@ -121,22 +131,11 @@ What users type for each feature, with examples, is in `docs/MANUAL.md`. These a
 
 ## Backlog
 
-Ranked on 2026-11-16, most useful first, from the requests in the original's issue tracker (`#` numbers are issues at github.com/biati-digital/alfred-calculate-anything), what Dean Jackson's Convert, Soulver, Raycast and other Alfred converters do, and each request run against this workflow. `docs/MEMORY.md`, "What other converters do", has the sources.
+Ranked on 2026-11-16 from the requests in the original's issue tracker (`#` numbers are issues at github.com/biati-digital/alfred-calculate-anything), what Dean Jackson's Convert, Soulver, Raycast and other Alfred converters do, and each request run against this workflow; `docs/MEMORY.md`, "What other converters do", has the sources. The owner had the top of the list built on 2026-11-16 (U5 to U7, C8, C9, D3, B1, the Indonesian language). What is left, most useful first:
 
-Bugs:
-
-- `2 cups` (and `2 cup`) with no target converts Cuban pesos: units answer nothing without a target, so the currency code CUP matches. Item 1 fixes it; a unit word should beat a currency code when nothing else says money.
-- `90 m to h` converts metres to hands, because `h` is the hand's symbol and `m` never falls back to minutes (#81). Keep `hand` and `hands` as words and let `h` mean hour.
-
-Features:
-
-1. Units with no target: `100 kg`, `72 f` and `1.3 km` give nothing. Convert to the other measurement system by default (kg to lb, °F to °C, km to mi) and let the user choose their own defaults. Convert, the tinkertrain fork and alijanah's workflow all do this; Convert saves a default when you press ⌘ on a result.
-2. Indonesian: an `id_ID` language with `ke` for "to"; number words and their shorthand, `ribu`/`rb`, `juta`/`jt`, `miliar`, `triliun` (`500rb`, `1,5jt idr ke usd`, `2 juta rupiah`); and the units still in daily use: `ons` (100 g), `kuintal` (100 kg), `are` (100 m²), `hektar`, and `tumbak`, `bata` and `ru` for land (about 14 m², varying by region; certificates use m²).
-3. Several targets at once: `100 usd to idr eur myr` gives nothing. It is the original's most discussed request (#1).
-4. Everyday units that Soulver has and this lacks: data rates and download time (`100 Mbps to MB/s`, `4 GB at 50 Mbps`; #24), fuel economy (`km/l`, `l/100km`, `mpg`), frequency (`Hz` to `GHz`), force (`N`, `kN`, `lbf`), acceleration (`m/s²`, `g`), `rpm`, troy ounces and carats, `MW` and `GW`, `ppi`. Generate the SI prefixes once instead of listing each prefixed unit.
-5. Feet and inches, and fractions, as input: `5'11"`, `5 ft 11 in to cm`, `1/8 in to mm`, `1 1/2 cups to ml` (#8, #79). Output already gives `5 ft, 10.87 in`.
-6. A `ca` menu inside Alfred, like Convert's `convinfo`: rates status and refresh, searchable lists of currencies and units, edit your own words, open the manual, check for a newer release.
-7. Smaller requests: number bases (`255 to hex`, #121); scientific notation (`1e6 usd to idr`, #110); Indian `lakh` and `crore` (#61); `tb` as tablespoon next to a volume (#170); `fortnight`; `145 min to timespan`; gold and silver (`xau`, `xag`: fawazahmed0 has them, open.er-api does not); `$100` typed with no keyword, through `$ € £ ¥` triggers as alijanah's workflow has; Raycast's `15% tip on 80` and `15% decrease from 813`; and the dates `monday in 3 weeks`, `week 44 2026` and `days left in this month`.
-8. Custom units, not only custom words, in `custom-keys.json`.
-9. A clear row instead of silence when `/usr/bin/python3` is missing: the launcher can check `xcode-select -p` first.
-10. Leave out the mixed-units row when floating point can't support it: `1 ly km` adds "9,460,730,472,580 km, 800.78 m".
+1. A `ca` menu inside Alfred, like Convert's `convinfo`: rates status and refresh, searchable lists of currencies and units, edit your own words, open the manual, check for a newer release.
+2. Custom units, not only custom words, in `custom-keys.json`.
+3. A clear row instead of silence when `/usr/bin/python3` is missing: the launcher can check `xcode-select -p` first.
+4. Electrical units from Soulver's list (V, A, Ω, mAh, and `5000 mah at 3.85 v to wh`), arithmetic with units (`3 kg * 2`), and `1/8 is what %`.
+5. Malay as a language (`ribu`, `juta`, `bilion`, `kepada`), for Malaysian users.
+6. Mixed rows for metric targets are noise (`1/8 in to mm` adds "3 mm, 175 μm"); keep them for imperial units and time only.

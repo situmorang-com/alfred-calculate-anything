@@ -33,7 +33,7 @@ Read the one that matches what you are about to do, and update it when you chang
 
 1. Read the `docs/ARCHITECTURE.md` section for the area you touch.
 2. Change the code, and add a test to `tests/test_calculate.py` that pins the new behaviour.
-3. Run the suite with both interpreters. Done when both print `OK`:
+3. Run the suite with both interpreters. Done when both print `OK`. Tests set "Also understand" to `none`, so they behave the same on any Mac:
    ```bash
    /usr/bin/python3 tests/test_calculate.py
    /opt/homebrew/bin/python3 tests/test_calculate.py
@@ -53,6 +53,7 @@ Run from this folder.
 | A query typed with no keyword | `/usr/bin/python3 calculate.py "100 usd to idr"` |
 | A keyword query | `/usr/bin/python3 calculate.py --time "+15 days"` (also `--vat`, `--color`) |
 | What `calc`, the Universal Action and the hotkey send | `/usr/bin/python3 calculate.py --any "Rp 1.500.000"` |
+| What the `$ € £ ¥` keywords send | `/usr/bin/python3 calculate.py --symbol "\$100 to idr"` |
 | What the `.` and `-` triggers send | `/usr/bin/python3 calculate.py --dot "5 km to m"`, `--neg "25f to c"` |
 | Download rates now | `/usr/bin/python3 calculate.py --refresh` (or `--refresh currency`, `--refresh crypto`) |
 | Delete cached rates | `/usr/bin/python3 calculate.py --clear` |

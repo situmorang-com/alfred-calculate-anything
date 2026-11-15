@@ -2,11 +2,17 @@
 """Data storage sizes.
 
     100 gigabytes in megabytes     2 gb to mb     400MiB to kib     2tb gb     1b kb
+    4 gb at 50 mbps                how long the transfer takes (also "over", "@")
 
 Follows the IEC standard: 1 MB = 1000 kB and 1 MiB = 1024 KiB. The "Binary mode"
 setting makes the decimal names binary as well (1 MB = 1024 kB), as many people expect.
 """
-from .core import item, lookup, mod, parse_number, plain_number, split_amount, term_splits
+import re
+
+from .core import NUMBER, item, lookup, mod, parse_number, plain_number, split_amount, term_splits
+
+# "<size> at <rate>": a download or copy time.
+_TRANSFER = re.compile(r'^(?P<size>.+?) (?:at|over|@|with|dengan) (?P<number>%s) ?(?P<rate>\S.*)$' % NUMBER)
 
 # unit -> (label, name, power, binary)
 SIZES = {
@@ -43,12 +49,41 @@ def build_index(lang):
     return index
 
 
+def _transfer(ctx, index, number, rest):
+    """"4 gb at 50 mbps" -> the time the transfer takes, or None."""
+    match = _TRANSFER.match(rest)
+    if not match:
+        return None
+    size = lookup(index, match.group('size'))
+    if not size:
+        return None
+    from . import units
+    rate_term = match.group('rate')
+    rates = [unit for category, unit in units._candidates(ctx, units.build_index(ctx.lang), rate_term, last=True)
+             if category == 'datarate']
+    if not rates:
+        return None
+    speed = parse_number(match.group('number'), ctx.settings) * units.UNITS['datarate'][rates[0]]
+    if speed <= 0:
+        return None
+    bits = parse_number(number, ctx.settings) * bytes_per(size, ctx.settings.force_binary) * 8
+    seconds = bits / speed
+    words = units.duration_text(ctx, seconds)
+    subtitle = (ctx.text('datastorage', 'transfer', '') or 'Time to move %s at %s') % (
+        '%s %s' % (number, SIZES[size][0]), '%s %s' % (match.group('number'), rates[0]))
+    clock = units.clock_text(seconds)
+    return [item(words, subtitle, arg=words), item(clock, subtitle, arg=clock)]
+
+
 def process(ctx, query):
     parts = split_amount(query)
     if not parts or not parts[1]:
         return None
     number, rest = parts
     index = build_index(ctx.lang)
+    transfer = _transfer(ctx, index, number, rest)
+    if transfer:
+        return transfer
     for from_term, to_term, _ in term_splits(rest, ctx.lang.stop_words('datastorage')):
         if not to_term:
             continue

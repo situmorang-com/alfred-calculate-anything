@@ -7,6 +7,8 @@
     40 as a % of 50      40 is 80% of 50, plus the increase/decrease between the two
     30 % 40              the same question, short form
     20% off 150          120          (and the 30 saved)
+    15% tip on 80        12           (and the 92 to pay)
+    15% increase from 813 / 15% decrease from 813      934.95 / 691.05 (and the 121.95)
 """
 import re
 
@@ -33,7 +35,7 @@ def process(ctx, query):
     if '%' not in text[1:]:
         return None
     words = sorted(set(ctx.lang.stop_words('percentage')), key=len, reverse=True)
-    operators = [r'\+', '-', '%', 'off'] + [re.escape(word) for word in words]
+    operators = [r'\+', '-', '%', 'off', 'tip', 'inc', 'dec'] + [re.escape(word) for word in words]
     pattern = r'^(%s)\s*(%%?)\s*(%s)\s*(%s)\s*(%%?)$' % (_NUMBER, '|'.join(operators), _NUMBER)
     match = re.match(pattern, text)
     if not match:
@@ -62,6 +64,17 @@ def process(ctx, query):
     if operator == 'off':
         portion = first / 100.0 * second
         return [row(second - portion), row(portion, share_of(first, second))]
+    if operator == 'tip':
+        portion = first / 100.0 * second
+        tip = (lang.get('tip') or '%s tip on %s') % (ctx.fmt(first) + '%', ctx.fmt(second))
+        total = (lang.get('with_tip') or '%s with the tip') % ctx.fmt(second)
+        return [row(portion, tip), row(second + portion, total)]
+    if operator in ('inc', 'dec'):
+        portion = first / 100.0 * second
+        key, default = ('increased', '%s increased by %s') if operator == 'inc' else ('decreased', '%s decreased by %s')
+        changed = (lang.get(key) or default) % (ctx.fmt(second), ctx.fmt(first) + '%')
+        result = second + portion if operator == 'inc' else second - portion
+        return [row(result, changed), row(portion, share_of(first, second))]
     if operator == '%':
         return _compare(ctx, lang, first, second, plain_hint)
     # "15% of 50": a stop word joins the percentage and the amount

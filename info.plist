@@ -8,6 +8,49 @@
 	<string>Tools</string>
 	<key>connections</key>
 	<dict>
+		<key>02EE532E-BB2C-5CFB-9BE1-0ADFE5DC9467</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A1594904-6033-5414-AAB9-3E3019BF6B16</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>A1594904-6033-5414-AAB9-3E3019BF6B16</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>A1594904-6033-5414-AAB9-3E3019BF6B16</string>
+				<key>modifiers</key>
+				<integer>524288</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>0356D59C-CA2E-5797-B081-66FB060AAFDC</key>
 		<array>
 			<dict>
@@ -378,6 +421,49 @@
 				<false/>
 			</dict>
 		</array>
+		<key>53554FBB-0CBF-5869-81C5-E6CDDD2C1B1D</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A1594904-6033-5414-AAB9-3E3019BF6B16</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>A1594904-6033-5414-AAB9-3E3019BF6B16</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>A1594904-6033-5414-AAB9-3E3019BF6B16</string>
+				<key>modifiers</key>
+				<integer>524288</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>571F27D6-721E-5AA2-A476-9B9040A36635</key>
 		<array>
 			<dict>
@@ -533,6 +619,49 @@
 				<true/>
 			</dict>
 		</array>
+		<key>B6027DC6-B1FC-52E3-8EB5-12EBB422E73E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A1594904-6033-5414-AAB9-3E3019BF6B16</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>A1594904-6033-5414-AAB9-3E3019BF6B16</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>A1594904-6033-5414-AAB9-3E3019BF6B16</string>
+				<key>modifiers</key>
+				<integer>524288</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>BE9AA4B5-C0CA-5EB0-86A8-B832E9F101A5</key>
 		<array>
 			<dict>
@@ -577,6 +706,49 @@
 			</dict>
 		</array>
 		<key>BF26FC79-7364-5C11-B0FD-89BF3DBD2CAD</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A1594904-6033-5414-AAB9-3E3019BF6B16</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>A1594904-6033-5414-AAB9-3E3019BF6B16</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>A1594904-6033-5414-AAB9-3E3019BF6B16</string>
+				<key>modifiers</key>
+				<integer>524288</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>CF08B62F-B59A-54FD-B6B2-48655E58A725</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
@@ -1696,6 +1868,202 @@
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>$</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>PYTHONPYCACHEPREFIX="${alfred_workflow_cache:-/tmp}/pycache" exec /usr/bin/python3 calculate.py --symbol "\$$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string></string>
+				<key>type</key>
+				<integer>11</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>B6027DC6-B1FC-52E3-8EB5-12EBB422E73E</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>€</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>PYTHONPYCACHEPREFIX="${alfred_workflow_cache:-/tmp}/pycache" exec /usr/bin/python3 calculate.py --symbol "€$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string></string>
+				<key>type</key>
+				<integer>11</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>CF08B62F-B59A-54FD-B6B2-48655E58A725</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>£</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>PYTHONPYCACHEPREFIX="${alfred_workflow_cache:-/tmp}/pycache" exec /usr/bin/python3 calculate.py --symbol "£$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string></string>
+				<key>type</key>
+				<integer>11</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>53554FBB-0CBF-5869-81C5-E6CDDD2C1B1D</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>¥</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>PYTHONPYCACHEPREFIX="${alfred_workflow_cache:-/tmp}/pycache" exec /usr/bin/python3 calculate.py --symbol "¥$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string></string>
+				<key>type</key>
+				<integer>11</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>02EE532E-BB2C-5CFB-9BE1-0ADFE5DC9467</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>**Calculate Anything** converts things in natural language, with no keyword: open Alfred and type a number.
@@ -1731,6 +2099,13 @@ Exchange rates: exchangerate-api.com, fawazahmed0/exchange-api, frankfurter.dev,
 </string>
 	<key>uidata</key>
 	<dict>
+		<key>02EE532E-BB2C-5CFB-9BE1-0ADFE5DC9467</key>
+		<dict>
+			<key>xpos</key>
+			<real>280.0</real>
+			<key>ypos</key>
+			<real>1145.0</real>
+		</dict>
 		<key>0356D59C-CA2E-5797-B081-66FB060AAFDC</key>
 		<dict>
 			<key>xpos</key>
@@ -1809,6 +2184,13 @@ Exchange rates: exchangerate-api.com, fawazahmed0/exchange-api, frankfurter.dev,
 			<key>ypos</key>
 			<real>365.0</real>
 		</dict>
+		<key>53554FBB-0CBF-5869-81C5-E6CDDD2C1B1D</key>
+		<dict>
+			<key>xpos</key>
+			<real>280.0</real>
+			<key>ypos</key>
+			<real>1030.0</real>
+		</dict>
 		<key>571F27D6-721E-5AA2-A476-9B9040A36635</key>
 		<dict>
 			<key>xpos</key>
@@ -1866,6 +2248,15 @@ Exchange rates: exchangerate-api.com, fawazahmed0/exchange-api, frankfurter.dev,
 			<key>ypos</key>
 			<real>400.0</real>
 		</dict>
+		<key>B6027DC6-B1FC-52E3-8EB5-12EBB422E73E</key>
+		<dict>
+			<key>note</key>
+			<string>An amount written symbol first: $100 to idr, €50, £20, ¥1000.</string>
+			<key>xpos</key>
+			<real>280.0</real>
+			<key>ypos</key>
+			<real>800.0</real>
+		</dict>
 		<key>BE9AA4B5-C0CA-5EB0-86A8-B832E9F101A5</key>
 		<dict>
 			<key>xpos</key>
@@ -1879,6 +2270,13 @@ Exchange rates: exchangerate-api.com, fawazahmed0/exchange-api, frankfurter.dev,
 			<real>40.0</real>
 			<key>ypos</key>
 			<real>135.0</real>
+		</dict>
+		<key>CF08B62F-B59A-54FD-B6B2-48655E58A725</key>
+		<dict>
+			<key>xpos</key>
+			<real>280.0</real>
+			<key>ypos</key>
+			<real>915.0</real>
 		</dict>
 		<key>D96CF986-DD08-5BBB-AE98-75A3793BF8B9</key>
 		<dict>
@@ -1933,6 +2331,10 @@ Pasting needs Accessibility permission for Alfred.</string>
 						<string>Swedish</string>
 						<string>sv_SE</string>
 					</array>
+					<array>
+						<string>Indonesian</string>
+						<string>id_ID</string>
+					</array>
 				</array>
 			</dict>
 			<key>description</key>
@@ -1943,6 +2345,44 @@ Pasting needs Accessibility permission for Alfred.</string>
 			<string>popupbutton</string>
 			<key>variable</key>
 			<string>language</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>auto</string>
+				<key>pairs</key>
+				<array>
+					<array>
+						<string>Automatic (this Mac's language and region)</string>
+						<string>auto</string>
+					</array>
+					<array>
+						<string>Nothing more</string>
+						<string>none</string>
+					</array>
+					<array>
+						<string>Indonesian</string>
+						<string>id_ID</string>
+					</array>
+					<array>
+						<string>Spanish</string>
+						<string>es_ES</string>
+					</array>
+					<array>
+						<string>Swedish</string>
+						<string>sv_SE</string>
+					</array>
+				</array>
+			</dict>
+			<key>description</key>
+			<string>Words from another language you can type on top of the Language above, such as Indonesian 500rb, 1,5jt ke usd, 5 ons and 1 tumbak. Automatic follows this Mac: a Mac set to Indonesia understands Indonesian.</string>
+			<key>label</key>
+			<string>Also understand</string>
+			<key>type</key>
+			<string>popupbutton</string>
+			<key>variable</key>
+			<string>input_language</string>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -1964,6 +2404,27 @@ Pasting needs Accessibility permission for Alfred.</string>
 			<string>textfield</string>
 			<key>variable</key>
 			<string>base_currencies</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>placeholder</key>
+				<string>lb, ft, °F</string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Typing a unit with no target ("100 kg") converts to these, separated by commas. Kinds of unit you leave out convert to the other measurement system: kg to lb, km to mi, °F to °C.</string>
+			<key>label</key>
+			<string>Default units</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>default_units</string>
 		</dict>
 		<dict>
 			<key>config</key>

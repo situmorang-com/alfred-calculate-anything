@@ -1,6 +1,6 @@
 # Calculate Anything: user manual
 
-For version 5.0.2 on Alfred 5 with the Powerpack. The example results were taken on 15 November 2026; exchange rates and prices change every day.
+For version 5.1 on Alfred 5 with the Powerpack. The example results were taken on 15 and 16 November 2026; exchange rates and prices change every day.
 
 ## Contents
 
@@ -12,14 +12,15 @@ For version 5.0.2 on Alfred 5 with the Powerpack. The example results were taken
 6. [Data storage](#6-data-storage)
 7. [Percentages](#7-percentages)
 8. [CSS sizes](#8-css-sizes)
-9. [VAT](#9-vat)
-10. [Dates and times](#10-dates-and-times)
-11. [Colors](#11-colors)
-12. [Languages and your own words](#12-languages-and-your-own-words)
-13. [Settings](#13-settings)
-14. [Maintenance](#14-maintenance)
-15. [Troubleshooting](#15-troubleshooting)
-16. [Privacy](#16-privacy)
+9. [Number bases](#9-number-bases)
+10. [VAT](#10-vat)
+11. [Dates and times](#11-dates-and-times)
+12. [Colors](#12-colors)
+13. [Languages and your own words](#13-languages-and-your-own-words)
+14. [Settings](#14-settings)
+15. [Maintenance](#15-maintenance)
+16. [Troubleshooting](#16-troubleshooting)
+17. [Privacy](#17-privacy)
 
 Appendices: [A. Currencies](#appendix-a-currencies) · [B. Units](#appendix-b-units) · [C. Time zone names](#appendix-c-time-zone-names) · [D. Date format letters](#appendix-d-date-format-letters)
 
@@ -42,10 +43,10 @@ Four keywords cover the rest:
 | `time` | dates, times and time zones | `time +15 days` |
 | `vat` | a VAT breakdown | `vat 400` |
 | `color` | color formats | `color #ff6600` |
-| `calc` | text that doesn't start with a number, and text sent from other apps | `calc $25`, `calc Rp 1.500.000` |
+| `calc` | text that doesn't start with a number, and text sent from other apps | `calc Rp 1.500.000`, `calc transfer 1 tb at 100 mbps` |
 | `_caclear` | deleting the cached exchange rates | `_caclear` |
 
-A query without a keyword must start with a number (a leading `.` or `-` works too: `.5 km to m`, `-25f to c`) and be at least three characters long. Everything else is left to Alfred, so ordinary searches such as `1password` are unaffected.
+A query without a keyword must start with a number (a leading `.` or `-` works too: `.5 km to m`, `-25f to c`) or with `$`, `€`, `£` or `¥` (`$100 to idr`), and be at least three characters long. Everything else is left to Alfred, so ordinary searches such as `1password` are unaffected.
 
 The first currency or crypto query after installing shows **Updating rates...** for a moment while the rates download.
 
@@ -88,6 +89,14 @@ Select an amount anywhere, such as `$25`, `Rp 1.500.000` or `USD 100 to IDR` in 
 | `150k idr to usd` | 8.23 USD |
 | `2.5 million yen to eur` | 14,175.58 EUR |
 | `1 500 000 idr to usd` | 82.28 USD |
+| `$100 to idr` | 1,822,936.37 IDR |
+| `100 usd to idr eur myr` | 1,822,936.37 IDR · 90.60 EUR · 408.58 MYR |
+
+`$`, `€`, `£` and `¥` can come first without a keyword: `$100 to idr`, `€50`. For any other symbol written first (`Rp 150.000`, `RM 50`), use `calc`.
+
+### Several targets
+
+List the targets after the amount, with spaces, commas or `and`: `100 usd to idr eur myr` and `100 usd to idr, eur and myr` both give one row per currency.
 
 ### No target: base currencies
 
@@ -109,9 +118,24 @@ Set them in **Base currencies**, for example `IDR, SGD, USD`. Left empty, they a
 
 ### Amounts
 
-- Separators: `1,350.50`, `1 350.50`, `1.500.000`, `1.350,50` and `.5` all work. Only a number that reads two ways, such as `1,500`, depends on **Input decimal separator**: Dot reads it as 1500, Comma as 1.5.
-- Multipliers: `k`, `thousand`, `m`, `mn`, `mio`, `million`, `b`, `bn`, `billion`, `t`, `tn`, `trillion` (`150k`, `2.5m`, `3 billion`). They apply to money only, so `5 m to ft` is five metres.
+- Separators: `1,350.50`, `1 350.50`, `1.500.000`, `1.350,50`, `1,5` and `.5` all work. Only a number that reads two ways, such as `1,500`, depends on **Input decimal separator**: Dot reads it as 1500, Comma as 1.5. A single comma or dot not followed by exactly three digits is always the decimal mark, so `1,5` is one and a half.
+- Multipliers: `k`, `thousand`, `m`, `mn`, `mio`, `million`, `b`, `bn`, `billion`, `t`, `tn`, `trillion`, `lakh`, `crore` (`150k`, `2.5m`, `3 billion`, `1 crore inr`). They apply to money only, so `5 m to ft` is five metres. `m` is always a million; for Indonesian billions write `miliar`.
+- Scientific notation: `1e6 idr to usd` gives 54.86 USD.
+- Indonesian amounts, when Indonesian is understood ([section 13](#13-languages-and-your-own-words)): `500rb`, `1,5jt ke usd`, `2 juta rupiah`, `1 miliar idr to usd`. A shorthand with no currency after it, such as `500rb`, is in this Mac's local currency.
 - Results show 2 decimals (**Currency decimals**). Very small results keep their significant digits instead of showing 0.00: `1 idr to usd` gives 0.000055 USD.
+
+### Gold and silver
+
+`xau`, `xag`, `xpt` and `xpd`, or `gold`, `silver`, `platinum` and `palladium`, are priced per troy ounce. Put a weight in front to price that much metal; an ounce of gold is a troy ounce.
+
+| Query | Result |
+| --- | --- |
+| `1 gold to usd` | 3,874.43 USD |
+| `10 g gold to idr` | 22,707,580.72 IDR |
+| `1 oz gold to idr` | 70,628,471.00 IDR |
+| `1 kg silver to usd` | 1,570.08 USD |
+
+These are spot prices from the same sources as the currencies, not what a shop charges.
 
 ### Where the rates come from
 
@@ -147,28 +171,66 @@ Rates are daily mid-market reference rates, not what a bank or card charges. The
 | Query | Result |
 | --- | --- |
 | `100 km to miles` | 62.13711922 mi · 62 mi, 723.99 ft |
-| `5' to cm` | 152.4 cm · 152 cm, 4 mm |
 | `72 f to c` | 22.22 °C |
 | `100 kg to lb` | 220.46226218 lb · 220 lb, 7.4 oz |
 | `100 ml to oz` | 3.38140227 fl oz |
 | `500 sqft to m2` | 46.45152 m² |
-| `1 acre to m2` | 4,046.8564224 m² |
 | `60 mph to kmh` | 96.56064 km/h |
 | `1 cup to ml` | 236.5882365 ml |
-| `3 tsp to tbsp` | 1 tbsp |
 | `1 atm to psi` | 14.69594878 psi |
 | `1 kwh to j` | 3,600,000 J |
 | `2 h to min` | 120 minutes |
-| `1 month to days` | 30.41666667 days · 30 days, 10 hours |
+| `15 km/l to mpg` | 35.2821875 mpg |
+| `100 mbps to mb/s` | 12.5 MB/s |
+| `1 ghz to mhz` | 1,000 MHz |
+| `3000 rpm to rad/s` | 314.15926536 rad/s |
+| `100 kn to lbf` | 22,480.89430997 lbf |
+| `9.81 m/s2 to g` | 1.00034160 g |
+| `1 ozt to g` | 31.1034768 g |
+| `5 ct to g` | 1 g |
 
-There are eleven categories: length, area, volume, weight, speed, rotation, temperature, pressure, time, energy and power. Write a unit as an abbreviation, a name or a plural; [Appendix B](#appendix-b-units) lists every accepted spelling.
+There are seventeen kinds: length, area, volume, weight, speed, angles, temperature, pressure, time, energy, power, frequency and rotation speed, force, acceleration, fuel economy, data rates and screen density. Write a unit as an abbreviation, a name or a plural; [Appendix B](#appendix-b-units) lists every accepted spelling.
+
+### No target
+
+Type a unit without a target and it converts to the other measurement system:
+
+| Query | Result |
+| --- | --- |
+| `100 kg` | 220.46226218 lb · 220 lb, 7.4 oz |
+| `72 f` | 22.22 °C |
+| `180 cm` | 70.86614173 in · 5.90551181 ft · 5 ft, 10.87 in |
+| `100 km` | 62.13711922 mi |
+| `2 cups` | 473.176473 ml |
+| `12 oz` | 340.1942775 g · 354.88235475 ml |
+| `100 mbps` | 12.5 MB/s |
+
+- To choose your own targets, list them in **Default units**, for example `kg, km, °C`. A kind of unit you leave out keeps the other system, and so does a unit you typed that is already your choice (`100 kg` with `kg` listed gives pounds).
+- Time, angles, frequencies and small metric units (`mg`) have no default, so `365 days` stays an ordinary search unless you list a time unit.
+- A few abbreviations are left alone when typed with no target because they usually mean something else: `k` (`10k`, ten thousand), `t`, `st` (`1st`), `pt` (`12pt` is a font size) and `n`. Their full names work: `300 kelvin`, `1 ton`, `2 pints`.
+
+### Several parts and fractions
+
+- Parts of one kind are added up: `5'11"`, `5' 11"`, `5 ft 11 in` and `5ft11in` all mean 71 inches, and `5'11"` gives 1.8034 m · 180.34 cm. More: `2 h 30 min to min` gives 150 minutes, `5 lb 3 oz to kg` gives 2.35301042 kg. A last number without a unit takes the next smaller one: `5'11` is 5 ft 11 in.
+- Fractions work as amounts: `1/8 in to mm` gives 3.175 mm, `1 1/2 cups to ml` 354.88235475 ml, and `¾ cup to ml` 177.44117738 ml.
+
+### Durations
+
+Convert time to `timespan` (or `duration`) to have it written out: `145 min to timespan` gives 2 hours, 25 minutes · 2:25:00. Converting to a larger unit adds a mixed row too: `100 months to years` gives 8.33333333 years · 8 years, 4 months.
+
+### Bits and bytes
+
+`mbps` is megabits per second, the speed internet plans quote, and `mb/s` megabytes per second, as `mb` is a megabyte elsewhere. With capitals, the letter decides: `Mb/s` and `Mbps` are megabits, `MB/s` and `MBps` megabytes. `100 mbps to mb/s` gives 12.5 MB/s.
+
+### Good to know
 
 - **Second row.** Where it helps, a second row gives the result in mixed units (`8 ft, 4 in`, `1 hour, 40 minutes`).
-- **Ambiguous abbreviations** take the meaning that fits the other side: `h` is a hand (`5 h to cm`) or an hour (`2 h to min`); `m` a metre or a minute; `oz` an ounce of weight or a fluid ounce (`100 ml to oz`); `pt` a pint (`12 pt to l`) or a CSS point (`12pt to px`).
+- **Ambiguous abbreviations** take the meaning that fits the other side: `m` is a metre or a minute (`90 m to h`); `oz` an ounce of weight or a fluid ounce (`100 ml to oz`); `pt` a pint (`12 pt to l`) or a CSS point (`12pt to px`); `tb` a terabyte or a tablespoon (`1 tb to tsp`); `kn` a kilonewton or a knot; `g` a gram or standard gravity (`9.81 m/s2 to g`). `h` is always an hour; hands, for horses, are `hh`.
 - **`in`** works both as a linking word and as inches: `100 cm in in` gives 39.37007874 in.
 - **Temperatures** show 2 decimals.
 - **Months and years** are averages here: a year is 365 days and a month a twelfth of that, 30.42 days. For calendar arithmetic, use `time`.
-- Converting between categories, such as `100 km to kg`, shows an error row.
+- **Indonesian units:** `ons` (100 g), `kuintal` (100 kg), `are` (100 m²) and `tumbak` work in any language; with Indonesian understood, so do `hektar`, `bata` and `ru`. A tumbak (bata, ru) is taken as 14 m², the most common value; it varies by region, and land certificates use m².
+- Converting between kinds, such as `100 km to kg`, shows an error row.
 
 ## 6. Data storage
 
@@ -182,6 +244,18 @@ There are eleven categories: length, area, volume, weight, speed, rotation, temp
 
 Units are `b` (byte), `kb` to `yb`, `kib` to `yib`, and `bit`, or their names (`megabytes`, `megas`, `gibibytes`); [Appendix B](#data-storage) lists them all. Decimal names follow the IEC standard, 1 MB = 1000 kB, while 1 MiB = 1024 KiB. Turn on **Data storage: Binary mode** to make 1 MB = 1024 kB.
 
+### Transfer time
+
+`<size> at <speed>` gives how long a download or copy takes; `over` and `@` work too.
+
+| Query | Result |
+| --- | --- |
+| `4 gb at 50 mbps` | 10 minutes, 40 seconds · 0:10:40 |
+| `1 tb over 100 mbps` | 22 hours, 13 minutes, 20 seconds · 22:13:20 |
+| `700 mb @ 1 mb/s` | 11 minutes, 40 seconds · 0:11:40 |
+
+Speeds follow [Bits and bytes](#bits-and-bytes).
+
 ## 7. Percentages
 
 | Query | Result | Second row |
@@ -192,8 +266,11 @@ Units are `b` (byte), `kb` to `yb`, `kib` to `yib`, and `bit`, or their names (`
 | `20% off 150` | 120 | 30, the discount |
 | `40 as a % of 50` | 40 is 80% of 50 | the increase from 40 to 50 (25%) and the decrease from 50 to 40 (20%) |
 | `30 % 40` | 30 is 75% of 40 | the increase (33.33333333%) and the decrease (25%) |
+| `15% tip on 80` | 12 | 92, the bill with the tip |
+| `15% increase from 813` | 934.95 | 121.95, the increase |
+| `15% decrease from 813` | 691.05 | 121.95, the decrease |
 
-Words work too: `plus`, `minus`, `percent`, `pct`, `as a percent of`, `as a percentage of`, `is what % of`, `is what percent of`. With the comma decimal settings, `10,5 + 5%` gives 11,025.
+Words work too: `plus`, `minus`, `percent`, `pct`, `as a percent of`, `as a percentage of`, `is what % of`, `is what percent of`, `discount` (like `off`), `tip for`, `increase on`, `decrease on`. With the comma decimal settings, `10,5 + 5%` gives 11,025.
 
 ## 8. CSS sizes
 
@@ -206,7 +283,23 @@ Words work too: `plus`, `minus`, `percent`, `pct`, `as a percent of`, `as a perc
 
 The units are `px`, `em`, `rem` and `pt`. The root size is 16px (**Base pixels**); add `base 17px` to a query to use another. em and rem both convert from the root size.
 
-## 9. VAT
+## 9. Number bases
+
+| Query | Result |
+| --- | --- |
+| `255 to hex` | FF |
+| `255 to binary` | 11111111 |
+| `255 to octal` | 377 |
+| `255 to base 7` | 513 |
+| `0xff` | 255 · 11111111 · 377 |
+| `0b1010 to decimal` | 10 |
+
+- Targets: `hex` or `hexadecimal`, `binary` or `bin`, `octal` or `oct`, `decimal` or `dec`, and `base 2` to `base 36`.
+- A number written with `0x`, `0b` or `0o` needs no target: it shows the other three bases.
+- ⌘ Return copies the result with its prefix, `0xFF`.
+- A plain number with no target, such as `255`, is left to Alfred.
+
+## 10. VAT
 
 The rate is 11% unless you change it: Indonesia's PPN on most goods and services. Luxury goods pay 12%. Set your own rate in **VAT percentage**.
 
@@ -220,7 +313,7 @@ The rate is 11% unless you change it: Indonesia's PPN on most goods and services
 - "Minus VAT" is the price before tax, for when 400 already includes it (400 ÷ 1.11), not 400 less 11%.
 - Without the keyword, `ppn`, `tax`, `gst` and `sales tax` work like `vat`, and `plus` and `minus` like `+` and `-`: `400 + ppn`, `400 minus tax`.
 
-## 10. Dates and times
+## 11. Dates and times
 
 Type `time` and an expression. Each answer is listed in every date format you have set (**Date formats**), then how far away it is, then its Unix timestamp. Return copies a row.
 
@@ -230,7 +323,10 @@ Type `time` and an expression. Each answer is listed in every date format you ha
 | Unix timestamps | `time 1577836800`, `time 1577836800000` (milliseconds), `time @1577836800` |
 | Relative | `time +15 days`, `time 3 days ago`, `time now plus 3 days`, `time now minus 2 weeks`, `time tomorrow`, `time yesterday 9am`, `time next friday 3pm`, `time last monday`, `time next month`, `time +1 week 2 days` |
 | Working days | `time today + 3 workdays` (also `business days`, `working days`, `wd`) |
-| Counting | `time days until 31 december`, `time weeks until 1 january`, `time hours since yesterday`, in seconds, minutes, hours, days, weeks, months or years |
+| Counting | `time days until 31 december`, `time weeks until 1 january`, `time hours since yesterday`, `time days until end of month`, `time workdays until 31 december`, in seconds, minutes, hours, days, workdays, weeks, months or years |
+| Time left | `time days left in this month`, `time workdays left in this month`, `time hours left in this day`, `time weeks left in the year`: whole days after today, up to the end of the day, week, month or year |
+| From now | `time in 3 days`, `time in 2 hours`, `time monday in 3 weeks` (the coming Monday, then three weeks on) |
+| Weeks | `time week` (this week), `time week 44`, `time week 44 2026`: the Monday-to-Sunday range of an ISO week, then its Monday |
 | Start and end | `time start of year`, `time end of 2021`, `time end of month`, `time start of next month`, `time end of week`, `time start of march`, `time first day of next month` |
 | A date | `time 31 December, 2021 18:00:00`, `time 31/12/2021 18:00`, `time 2021-12-31 18:00`, `time december 31 2021 6pm`, `time 31st of december 2021 at 6:00 pm`, `time 2021`, `time noon` |
 | Between two dates | `time 25 december 2021 - 31 december 2021` gives 6 days; `time 1 january 2020 - 15 march 2021` gives 1 year, 2 months, 2 weeks, and 439 days |
@@ -256,7 +352,7 @@ A zone can be an abbreviation (`utc`, `gmt`, `wib`, `wita`, `wit`, `sgt`, `myt`,
 
 **Date formats** takes PHP `date()` letters; separate several formats with `|`, as in `j F, Y, g:i:s a | Y-m-d H:i:s`. [Appendix D](#appendix-d-date-format-letters) lists the letters. A backslash prints the next letter as it is: `\a\t` prints "at".
 
-## 11. Colors
+## 12. Colors
 
 Type `color`, a color, and optionally the format to convert to.
 
@@ -273,28 +369,33 @@ Type `color`, a color, and optionally the format to convert to.
 - **Writes** hex, rgb, hsl, hwb, hsv, cmyk, lab and oklch, plus `xyz` and `yuv` when you ask for them by name.
 - Each row shows a swatch of the color.
 
-## 12. Languages and your own words
+## 13. Languages and your own words
 
-**Language** (English, Spanish or Swedish) sets the language of the results and adds that language's words to what you can type. English words work whatever the language.
+**Language** (English, Indonesian, Spanish or Swedish) sets the language of the results and adds that language's words to what you can type. English words work whatever the language.
+
+**Also understand** adds the words of one more language without changing the results' language. On Automatic it follows this Mac: a Mac whose language or region is Indonesian understands Indonesian, and one whose language is Spanish or Swedish understands that language.
 
 | Language | Examples |
 | --- | --- |
+| Indonesian | `500rb`, `1,5jt ke usd`, `2 juta rupiah`, `100 usd ke idr`, `10 gram emas ke idr`, `5 ons`, `1 tumbak`, `2 hektar ke m2`, `5 km ke m`, `15% dari 50`, `20% diskon 150`, `400 + ppn`, `time besok`, `time 3 hari lalu`, `time 31 desember 2026`, `time hari sampai 31 desember`, `time minggu depan` |
 | Spanish | `100 euros a dolares`, `10 días a horas`, `120 más 30%`, `400 mas iva`, `time ahora más 3 días`, `time inicio de 2020`, `time dias hasta 31 diciembre` |
 | Swedish | `5 kilometer till meter`, `100 kr till usd`, `400 plus moms`, `time början av 2021` |
 
+In Indonesian, `minggu` is a week; Sunday is `hari minggu`.
+
 ### Your own words
 
-Add words in a file named `custom-keys.json` in the workflow's data folder, `~/Library/Application Support/Alfred/Workflow Data/com.situmorang.calculateanything/`. It survives updates. For example, Indonesian:
+Add words in a file named `custom-keys.json` in the workflow's data folder, `~/Library/Application Support/Alfred/Workflow Data/com.situmorang.calculateanything/`. It survives updates. For example, a few Malay words:
 
 ```json
 {
-  "multipliers": { "ribu": 1000, "rb": 1000, "juta": 1000000, "jt": 1000000, "miliar": 1000000000 },
-  "currency": { "stop_words": ["ke", "jadi"] },
-  "units": { "stop_words": ["ke", "jadi"] }
+  "multipliers": { "ribu": 1000, "juta": 1000000, "bilion": 1000000000 },
+  "currency": { "stop_words": ["kepada"] },
+  "units": { "stop_words": ["kepada"] }
 }
 ```
 
-Now `1.5 juta idr ke usd` gives 82.28 USD, `250rb idr ke sgd` gives 17.66 SGD, and `10 km ke m` gives 10,000 m.
+Now `1.5 bilion idr kepada myr` and `10 km kepada m` work.
 
 | Section | A key is | Its value is |
 | --- | --- | --- |
@@ -303,18 +404,20 @@ Now `1.5 juta idr ke usd` gives 82.28 USD, `250rb idr ke sgd` gives 17.66 SGD, a
 | `units` | a word for a unit | the unit as written in Appendix B: `"hakunamatata": "year"` |
 | `datastorage` | a word for a data unit | `b`, `kb` to `yib`, or `bit` |
 | `percentage`, `vat`, `time` | a word | what it stands for: `"plus": "+"` |
-| `multipliers` | a word or suffix | a number: `"juta": 1000000` |
+| `multipliers` | a word or suffix | a number: `"bilion": 1000000000` |
 
 Each section can also take `"stop_words"`, the linking words between the two sides (`to`, `in`, `ke`); yours are added to the built-in ones. Where your words and the built-in ones differ, yours win. Changes apply from the next query.
 
-## 13. Settings
+## 14. Settings
 
 Open Alfred Preferences, choose Workflows, select Calculate Anything, and click **Configure Workflow**.
 
 | Setting | Default | What it does |
 | --- | --- | --- |
 | Language | English | Language of the results and of the words you can type. English words always work. |
+| Also understand | Automatic | One more language's words you can type, such as Indonesian `500rb` and `ke`. Automatic follows this Mac's language and region. |
 | Base currencies | empty | Targets for an amount with no target, separated by commas. Empty means this Mac's currency, then USD, EUR and MYR. |
+| Default units | empty | Targets for a unit with no target, such as `kg, km, °C`. Kinds left out convert to the other measurement system. |
 | Currency decimals | 2 | Decimals for currency amounts. -1 shows every decimal. |
 | Cryptocurrency decimals | -1 | Decimals for amounts in a coin. |
 | Input decimal separator | Dot | Whether you type `23.51` or `23,51`. |
@@ -331,16 +434,16 @@ Open Alfred Preferences, choose Workflows, select Calculate Anything, and click 
 | Fixer API key | empty | Optional; asked first for exchange rates. |
 | CoinMarketCap API key | empty | Optional; asked first for coin prices. |
 
-## 14. Maintenance
+## 15. Maintenance
 
 - **Refresh rates now:** type `_caclear`, press Return, then run any conversion. The rates download again.
 - **Where data lives:** `~/Library/Application Support/Alfred/Workflow Data/com.situmorang.calculateanything/` holds the cached rates and prices, the color swatches and your `custom-keys.json`.
 - **Update:** download the newest release and double-click it; Alfred offers to replace the old version and keeps your settings. If you installed with `git clone`, run `git pull` in the workflow's folder.
 - **Remove:** delete the workflow in Alfred Preferences, and the data folder above if you like.
 
-## 15. Troubleshooting
+## 16. Troubleshooting
 
-**Nothing appears.** Start with a number and type at least three characters. Check the spelling of the units or currencies. For a coin outside the 250 largest, name a target (`100 gas to usd`). Check that the workflow is enabled in Alfred Preferences.
+**Nothing appears.** Start with a number (or `$`, `€`, `£`, `¥`) and type at least three characters. Check the spelling of the units or currencies. For a coin outside the 250 largest, name a target (`100 gas to usd`). Check that the workflow is enabled in Alfred Preferences.
 
 **macOS asks to install command line developer tools.** Accept. The workflow runs on the Python 3 they include.
 
@@ -362,15 +465,19 @@ Open Alfred Preferences, choose Workflows, select Calculate Anything, and click 
 
 **A word isn't recognised.** Add it to `custom-keys.json` ([Your own words](#your-own-words)).
 
+**A unit typed alone converts to the wrong unit.** List the units you want in **Default units** ([No target](#no-target)).
+
+**`5 h` used to mean hands.** `h` is always an hour now; type `hh` or `hands`.
+
 **Anything else.** In Alfred Preferences, open the workflow and click the bug icon to open the debugger, type the query again, and read what the workflow printed.
 
-## 16. Privacy
+## 17. Privacy
 
 What you type stays on your Mac. The only network requests are the downloads of rates and prices described above: plain requests to those public services that carry no query, account or personal data. If you add one of the optional API keys, it is sent only to its own service.
 
 ## Appendix A: Currencies
 
-Every currency the workflow knows, with its English name and the other ways to type it. The full English name works too (`indonesian rupiah`), as do plurals. Words in Spanish and Swedish are in `lang/es_ES-keys.json` and `lang/sv_SE-keys.json`.
+Every currency the workflow knows, with its English name and the other ways to type it. The full English name works too (`indonesian rupiah`), as do plurals. Gold, silver, platinum and palladium are priced per troy ounce. Words in Indonesian, Spanish and Swedish are in `lang/id_ID-keys.json`, `lang/es_ES-keys.json` and `lang/sv_SE-keys.json`.
 
 | Code | Name | Also typed as |
 | --- | --- | --- |
@@ -539,11 +646,15 @@ Every currency the workflow knows, with its English name and the other ways to t
 | `vuv` | Vanuatu vatu |  |
 | `wst` | Samoan tala |  |
 | `xaf` | Central African CFA franc |  |
+| `xag` | Silver (troy ounce) | `silver` |
+| `xau` | Gold (troy ounce) | `gold` |
 | `xcd` | East Caribbean dollar |  |
 | `xcg` | Caribbean guilder |  |
 | `xdr` | Special drawing rights |  |
 | `xof` | West African CFA franc |  |
+| `xpd` | Palladium (troy ounce) | `palladium` |
 | `xpf` | CFP franc |  |
+| `xpt` | Platinum (troy ounce) | `platinum` |
 | `yer` | Yemeni rial |  |
 | `zar` | South African rand | `rand`, `south african rand` |
 | `zmw` | Zambian kwacha |  |
@@ -552,7 +663,7 @@ Every currency the workflow knows, with its English name and the other ways to t
 
 ## Appendix B: Units
 
-The first column is what results show and what `custom-keys.json` values refer to; any spelling in the last column works too, as does a plural ending in `s`. `h`, `m`, `d`, `w` and `oz` appear twice because they take the meaning that fits the other side of the conversion. Words in Spanish and Swedish are in `lang/es_ES-keys.json` and `lang/sv_SE-keys.json`.
+The first column is what `custom-keys.json` values and the **Default units** setting refer to; any spelling in the last column works too, as does a plural ending in `s`. `m`, `d`, `w`, `oz` and `tb` appear twice because they take the meaning that fits the other side of the conversion, and `N` is both a weight and a force. Words in Indonesian, Spanish and Swedish are in `lang/id_ID-keys.json`, `lang/es_ES-keys.json` and `lang/sv_SE-keys.json`.
 
 ### Length
 
@@ -571,7 +682,9 @@ The first column is what results show and what `custom-keys.json` values refer t
 | `yd` | yd | `yard`, `yards` |
 | `mi` | mi | `mile`, `miles` |
 | `nmi` | nmi | `nautical mile`, `nautical miles` |
-| `h` | hands | `hand`, `hands` |
+| `fur` | fur | `furlong`, `furlongs` |
+| `ftm` | ftm | `fathom`, `fathoms` |
+| `hh` | hands | `hand`, `hands` |
 | `ly` | ly | `lightyear`, `light year`, `lightyears`, `light years` |
 | `au` | au | `astronomical unit`, `astronomical units` |
 | `pc` | pc | `parsec`, `parsecs` |
@@ -590,6 +703,8 @@ The first column is what results show and what `custom-keys.json` values refer t
 | `mi2` | mi² | `mi^2`, `sqmi`, `sq mi`, `square mile`, `square miles` |
 | `ac` | ac | `acre`, `acres` |
 | `ha` | ha | `hectare`, `hectares` |
+| `are` | are | `ares` |
+| `tumbak` | tumbak |  |
 
 ### Volume
 
@@ -598,6 +713,8 @@ The first column is what results show and what `custom-keys.json` values refer t
 | `l` | l | `liter`, `litre`, `liters`, `litres` |
 | `dm3` | dm³ |  |
 | `ml` | ml | `mililiter`, `mililiters`, `milliliter`, `millilitre`, `milliliters`, `millilitres` |
+| `cl` | cl | `centiliter`, `centilitre`, `centiliters`, `centilitres` |
+| `dl` | dl | `deciliter`, `decilitre`, `deciliters`, `decilitres` |
 | `cm3` | cm³ | `cc`, `cm^3`, `cubic centimeter`, `cubic centimeters` |
 | `hl` | hl | `hectoliters`, `hectolitres` |
 | `kl` | kl | `kiloliters`, `kilolitres` |
@@ -617,7 +734,7 @@ The first column is what results show and what `custom-keys.json` values refer t
 | `floz` | fl oz | `fl oz`, `fl.oz`, `fl. oz`, `us floz`, `us-floz`, `fluid oz`, `us fl oz`, `fluid ounce`, `fluid ounces`, `us fluid ounce`, `us fluid ounces`, `oz` |
 | `ukfloz` | UK fl oz | `uk floz`, `uk fl oz`, `uk fluid ounce`, `uk fluid ounces`, `imperial fluid ounce`, `imperial fluid ounces` |
 | `cup` | cup | `cups` |
-| `tbsp` | tbsp | `tbs`, `tbsps`, `tablespoon`, `tablespoons` |
+| `tbsp` | tbsp | `tbs`, `tbsps`, `tablespoon`, `tablespoons`, `tb` |
 | `tsp` | tsp | `tsps`, `teaspoon`, `teaspoons` |
 
 ### Weight
@@ -627,13 +744,18 @@ The first column is what results show and what `custom-keys.json` values refer t
 | `kg` | kg | `kilo`, `kilos`, `kilogram`, `kilograms` |
 | `g` | g | `gram`, `grams` |
 | `mg` | mg | `miligram`, `miligrams`, `milligram`, `milligrams` |
+| `μg` | μg | `ug`, `mcg`, `microgram`, `micrograms` |
 | `N` | N | `newton`, `newtons` |
 | `st` | st | `stone`, `stones` |
 | `lb` | lb | `lbs`, `pound`, `pounds` |
 | `oz` | oz | `ounce`, `ounces` |
+| `ozt` | oz t | `toz`, `oz t`, `troy oz`, `troy ounce`, `troy ounces` |
+| `ct` | ct | `carat`, `carats` |
 | `t` | t | `ton`, `tons`, `tonne`, `tonnes`, `metric ton`, `metric tons` |
 | `ukt` | UK long tons | `long ton`, `long tons` |
 | `ust` | US short tons | `short ton`, `short tons` |
+| `ons` | ons |  |
+| `kuintal` | kuintal | `quintal`, `quintals` |
 
 ### Speed
 
@@ -645,12 +767,16 @@ The first column is what results show and what `custom-keys.json` values refer t
 | `fps` | ft/s | `ft/s`, `feet per second`, `foot per second` |
 | `knot` | kn | `kn`, `kt`, `kts`, `knots` |
 
-### Rotation
+### Angles
 
 | Unit | Shown as | Also typed as |
 | --- | --- | --- |
 | `deg` | deg | `°`, `degree`, `degrees` |
 | `rad` | rad | `radian`, `radians` |
+| `arcmin` | arcmin | `arcminute`, `arc minute`, `arcminutes`, `arc minutes` |
+| `arcsec` | arcsec | `arcsecond`, `arc second`, `arcseconds`, `arc seconds` |
+| `rev` | rev | `turn`, `turns`, `revolution`, `revolutions` |
+| `grad` | grad | `gon`, `gons`, `gradian`, `gradians` |
 
 ### Temperature
 
@@ -674,6 +800,7 @@ The first column is what results show and what `custom-keys.json` values refer t
 | `atm` | atm | `atmosphere`, `atmospheres` |
 | `torr` | torr |  |
 | `mmhg` | mmHg | `mm hg` |
+| `inhg` | inHg | `in hg`, `inch of mercury`, `inches of mercury` |
 
 ### Time
 
@@ -684,11 +811,12 @@ The first column is what results show and what `custom-keys.json` values refer t
 | `month` | month | `mo`, `mos`, `months` |
 | `week` | week | `wk`, `wks`, `weeks`, `w` |
 | `day` | day | `days`, `d` |
-| `hr` | hr | `hrs`, `hour`, `hours`, `h` |
+| `hr` | hr | `h`, `hrs`, `hour`, `hours` |
 | `min` | min | `mins`, `minute`, `minutes`, `m` |
 | `ms` | ms | `millisecond`, `milliseconds` |
 | `μs` | μs | `microsecond`, `microseconds` |
 | `ns` | ns | `nanosecond`, `nanoseconds` |
+| `fortnight` | fortnight | `fortnights` |
 | `decade` | decade | `decades` |
 | `century` | century | `centuries` |
 
@@ -706,6 +834,9 @@ The first column is what results show and what `custom-keys.json` values refer t
 | `whr` | Wh | `wh`, `watt hour`, `watt hours` |
 | `kwhr` | kWh | `kwh`, `kilowatt hour`, `kilowatt hours` |
 | `mwhr` | MWh | `mwh`, `megawatt hour`, `megawatt hours` |
+| `gwhr` | GWh | `gwh`, `gigawatt hour`, `gigawatt hours` |
+| `twhr` | TWh | `twh`, `terawatt hour`, `terawatt hours` |
+| `ev` | eV | `electronvolt`, `electron volt`, `electronvolts`, `electron volts` |
 | `mev` | MeV |  |
 | `btu` | BTU | `btus`, `british thermal unit`, `british thermal units` |
 
@@ -715,8 +846,77 @@ The first column is what results show and what `custom-keys.json` values refer t
 | --- | --- | --- |
 | `w` | W | `watt`, `watts` |
 | `kw` | kW | `kilowatt`, `kilowatts` |
+| `MW` | MW | `megawatt`, `megawatts` |
+| `GW` | GW | `gigawatt`, `gigawatts` |
 | `ps` | PS | `metric horsepower` |
 | `hp` | hp | `horsepower`, `mechanical horsepower` |
+| `btu/h` | BTU/h | `btuh`, `btu/hr`, `btu per hour`, `btus per hour` |
+
+### Frequency and rotation speed
+
+| Unit | Shown as | Also typed as |
+| --- | --- | --- |
+| `Hz` | Hz | `hertz` |
+| `kHz` | kHz | `kilohertz` |
+| `MHz` | MHz | `megahertz` |
+| `GHz` | GHz | `gigahertz` |
+| `THz` | THz | `terahertz` |
+| `rpm` | rpm | `r/min`, `rev/min`, `revolutions per minute` |
+| `rps` | rps | `revolutions per second` |
+| `rad/s` | rad/s | `radians per second` |
+
+### Force
+
+| Unit | Shown as | Also typed as |
+| --- | --- | --- |
+| `N` | N | `newton`, `newtons` |
+| `kN` | kN | `kilonewton`, `kilonewtons` |
+| `lbf` | lbf | `lbs force`, `pound force`, `pound-force`, `pounds force`, `pounds-force` |
+| `kgf` | kgf | `kp`, `kilogram force`, `kilogram-force`, `kilograms force`, `kilograms-force` |
+
+### Acceleration
+
+| Unit | Shown as | Also typed as |
+| --- | --- | --- |
+| `m/s2` | m/s² | `m/s/s`, `m/s^2`, `meters per second squared`, `metres per second squared` |
+| `ft/s2` | ft/s² | `ft/s/s`, `ft/s^2`, `feet per second squared` |
+| `gn` | g | `g`, `gee`, `g force`, `g-force`, `standard gravity` |
+
+### Fuel economy
+
+| Unit | Shown as | Also typed as |
+| --- | --- | --- |
+| `km/l` | km/l | `kpl`, `kmpl`, `km/liter`, `km/litre`, `km per liter`, `km per litre`, `kilometers per liter`, `kilometres per litre` |
+| `l/100km` | l/100 km | `lp100km`, `l/100 km`, `l per 100 km`, `liters per 100km`, `litres per 100km`, `liters per 100 km`, `litres per 100 km` |
+| `mpg` | mpg | `mpg us`, `us mpg`, `miles per gallon` |
+| `ukmpg` | UK mpg | `mpg uk`, `uk mpg`, `imperial mpg`, `miles per imperial gallon` |
+
+### Data rates
+
+| Unit | Shown as | Also typed as |
+| --- | --- | --- |
+| `bit/s` | bit/s | `bits/s`, `bit per second`, `bits per second` |
+| `kbit/s` | kbit/s | `kbits/s`, `kilobit per second`, `kilobits per second` |
+| `Mbit/s` | Mbit/s | `mbits/s`, `megabit per second`, `megabits per second` |
+| `Gbit/s` | Gbit/s | `gbits/s`, `gigabit per second`, `gigabits per second` |
+| `Tbit/s` | Tbit/s | `terabit per second`, `terabits per second` |
+| `B/s` | B/s | `byte per second`, `bytes per second` |
+| `kB/s` | kB/s | `kilobyte per second`, `kilobytes per second` |
+| `MB/s` | MB/s | `megabyte per second`, `megabytes per second` |
+| `GB/s` | GB/s | `gigabyte per second`, `gigabytes per second` |
+| `TB/s` | TB/s | `terabyte per second`, `terabytes per second` |
+| `KiB/s` | KiB/s | `kibibytes per second` |
+| `MiB/s` | MiB/s | `mebibytes per second` |
+| `GiB/s` | GiB/s | `gibibytes per second` |
+
+`bps`, `kbps`, `mbps`, `gbps` and `tbps` are bits per second. Typed in lower case, `kb/s` to `tb/s` are bytes per second, as `mb` is a megabyte everywhere else. With capitals the letter decides: `Mb/s` and `Mbps` are megabits, `MB/s` and `MBps` megabytes.
+
+### Screen density
+
+| Unit | Shown as | Also typed as |
+| --- | --- | --- |
+| `ppi` | ppi | `dpi`, `dots per inch`, `pixels per inch` |
+| `ppcm` | ppcm | `dpcm`, `dots per centimeter`, `pixels per centimeter`, `pixels per centimetre` |
 
 ### Data storage
 

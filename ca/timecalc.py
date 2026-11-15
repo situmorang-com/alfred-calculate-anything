@@ -11,6 +11,10 @@
     time 25 December, 2021 - 31 December, 2021      the difference between two dates
     time 3pm utc                          a time given in another zone, shown in yours
     time now in tokyo                     your time shown in another zone
+    time monday in 3 weeks                time in 2 hours
+    time week 44 2026                     time week            ISO weeks, Monday to Sunday
+    time days left in this month          also weeks, workdays, hours; month, year, week
+    time days until end of month          until/since a start or end
 
 The original handed all of this to PHP's date parser. This module is that parser's
 everyday subset, written out, so it has no dependency to rot.
@@ -327,20 +331,22 @@ def translate(ctx, query):
             continue
         text = re.sub(_word_pattern(key), ' %s ' % value, text)
 
-    if not ctx.lang.code.startswith('en'):
+    sources = [] if ctx.lang.code.startswith('en') else [ctx.lang.section('time')]
+    sources += [extra.get('time') for extra in ctx.lang.input_strings if isinstance(extra.get('time'), dict)]
+    if sources:
         table = {}
-        strings = ctx.lang.section('time')
-        for english in ('second', 'seconds', 'minute', 'minutes', 'hour', 'hours', 'day', 'days',
-                        'week', 'weeks', 'month', 'months', 'year', 'years'):
-            local = strings.get(english)
-            if isinstance(local, str) and local:
-                table.setdefault(local.lower(), english)
-        for key, english_names in (('months', MONTHS), ('months_short', MONTHS_SHORT),
-                                   ('weekdays', WEEKDAYS), ('weekdays_short', WEEKDAYS_SHORT)):
-            local_names = strings.get(key)
-            if isinstance(local_names, list) and len(local_names) == len(english_names):
-                for local, english in zip(local_names, english_names):
-                    table.setdefault(str(local).lower(), english)
+        for strings in sources:
+            for english in ('second', 'seconds', 'minute', 'minutes', 'hour', 'hours', 'day', 'days',
+                            'week', 'weeks', 'month', 'months', 'year', 'years'):
+                local = strings.get(english)
+                if isinstance(local, str) and local:
+                    table.setdefault(local.lower(), english)
+            for key, english_names in (('months', MONTHS), ('months_short', MONTHS_SHORT),
+                                       ('weekdays', WEEKDAYS), ('weekdays_short', WEEKDAYS_SHORT)):
+                local_names = strings.get(key)
+                if isinstance(local_names, list) and len(local_names) == len(english_names):
+                    for local, english in zip(local_names, english_names):
+                        table.setdefault(str(local).lower(), english)
         for local in list(table):
             table.setdefault(strip_accents(local), table[local])
 
@@ -488,6 +494,11 @@ def parse(text, now, local_zone, month_first):
         if match:
             amount = float(match.group(2)) * (-1 if match.group(1) == '-' else 1)
             steps.append([amount, UNIT_WORDS[match.group(3)]])
+            text = text[match.end():].strip()
+            continue
+        match = take(r'^in (\d+(?:\.\d+)?) ?(%s)\b' % _UNIT)        # "monday in 3 weeks"
+        if match:
+            steps.append([float(match.group(1)), UNIT_WORDS[match.group(2)]])
             text = text[match.end():].strip()
             continue
         match = take(r'^(next|last|previous|this) (%s|%s)\b' % (_UNIT, _WEEKDAY))
@@ -730,13 +741,18 @@ def _nearest_year(text, target, now, since):
 def _until(ctx, unit_word, target, now, since):
     """How many <unit> until (or since) a moment."""
     unit = UNIT_WORDS.get(unit_word)
-    if unit is None or unit in ('weekday', 'fortnight', 'decade'):
+    if unit is None or unit in ('fortnight', 'decade'):
         return None
     moment = target.moment
     start, end = (moment, now) if since else (now, moment)
     if end < start:
         start, end = end, start
     seconds = (end - start).total_seconds()
+    if unit == 'weekday':
+        first, last = start.date(), end.astimezone(start.tzinfo).date()
+        number = sum(1 for offset in range(1, (last - first).days + 1)
+                     if (first + dt.timedelta(days=offset)).weekday() < 5)
+        return number, 'workday' if number == 1 else 'workdays'
     if unit == 'day':
         if target.has_time:
             number = round(seconds / 86400.0)
@@ -753,6 +769,62 @@ def _until(ctx, unit_word, target, now, since):
     return number, ctx.text('time', word, word)
 
 
+def _week_rows(ctx, year, week, now):
+    """ISO week `week` of `year`: its Monday-to-Sunday range, then the Monday as usual."""
+    try:
+        monday = dt.date.fromisocalendar(year, week, 1)
+    except ValueError:
+        return None
+    sunday = monday + dt.timedelta(days=6)
+    start = now.replace(year=monday.year, month=monday.month, day=monday.day, hour=0, minute=0, second=0)
+    end = start + dt.timedelta(days=6)
+    template = ctx.text('time', 'week_range', '') or 'Week %s of %s'
+    span = '%s – %s' % (php_date('j F' if monday.year == sunday.year else 'j F Y', start, ctx),
+                        php_date('j F Y', end, ctx))
+    rows = [item(span, template % (week, year), arg=span)]
+    return rows + _instant_rows(ctx, Parsed(start, False, None), now, False)
+
+
+def _edge_moment(ctx, text, now):
+    """"end of month" / "start of next year" -> Parsed, or None."""
+    for name, kind in (('end of', 'end'), ('start of', 'start')):
+        found = _phrase_match(ctx, name, text, leading=True)
+        if found is not None and found[1]:
+            moment = _edge_of(kind, found[1], now)
+            if moment is not None:
+                return Parsed(moment, False, None)        # counted in calendar days, like a date
+    return None
+
+
+_LEFT = re.compile(r'^(seconds|minutes|hours|days|weeks|weekdays) left(?: (?:in|of))?(?: this| the)? '
+                   r'(day|week|month|year)$')
+
+
+def _left_rows(ctx, unit, period, now):
+    """"days left in this month": whole days after today up to the end of the period."""
+    end = _edge_of('end', period, now)
+    if end is None:
+        return None
+    if unit == 'days':
+        number = (end.date() - now.date()).days
+    elif unit == 'weekdays':
+        number = sum(1 for offset in range(1, (end.date() - now.date()).days + 1)
+                     if (now.date() + dt.timedelta(days=offset)).weekday() < 5)
+    elif unit == 'weeks':
+        number = round((end.date() - now.date()).days / 7.0, 1)
+    else:
+        seconds = (end - now).total_seconds() + 1
+        number = int(seconds // SECONDS[unit[:-1]])
+    if unit == 'weekdays':
+        word = 'workday' if number == 1 else 'workdays'
+    else:
+        word = unit[:-1] if number == 1 else unit
+        word = ctx.text('time', word, word)
+    title = '%s %s' % (ctx.fmt(number), word)
+    template = ctx.text('time', 'left_subtitle', '') or 'Left until %s'
+    return [item(title, template % php_date('j F Y', end, ctx), arg=ctx.fmt(number))]
+
+
 def keyword(ctx, query, now=None):
     settings = ctx.settings
     zone = settings.timezone
@@ -764,6 +836,19 @@ def keyword(ctx, query, now=None):
 
     if not text or text in ('now', 'time'):
         return _instant_rows(ctx, Parsed(now, True, None), now, True)
+
+    # "week 44 2026", "week 44", "week": ISO weeks
+    week = re.match(r'^(?:week|wk)(?: ?(\d{1,2})(?: (\d{4}))?)?$', text)
+    if week:
+        year, number, _ = now.isocalendar()
+        if week.group(1):
+            number = int(week.group(1))
+            year = int(week.group(2)) if week.group(2) else now.year
+        return _week_rows(ctx, year, number, now) or invalid
+
+    left = _LEFT.match(text)
+    if left:
+        return _left_rows(ctx, left.group(1), left.group(2), now) or invalid
 
     # two dates: the time between them
     if ' - ' in text:
@@ -787,10 +872,12 @@ def keyword(ctx, query, now=None):
     for name, since in (('until', False), ('since', True)):
         found = _phrase_match(ctx, name, text, leading=False)
         if found and found[0] in UNIT_WORDS and found[1]:
-            target = parse(found[1], now, zone, month_first)
-            if not target:
-                return invalid
-            target = _nearest_year(found[1], target, now, since)
+            target = _edge_moment(ctx, found[1], now)
+            if target is None:
+                target = parse(found[1], now, zone, month_first)
+                if not target:
+                    return invalid
+                target = _nearest_year(found[1], target, now, since)
             counted = _until(ctx, found[0], target, now, since)
             if not counted:
                 return invalid

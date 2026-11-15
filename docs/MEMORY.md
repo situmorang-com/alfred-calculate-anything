@@ -2,11 +2,12 @@
 
 Shared memory for everyone who works on this workflow, person or agent, whichever tool they use. Add an entry when you learn something the next one would otherwise rediscover the hard way: a decision and its reason, a verified behaviour, an environment fact, a trap. Date every entry (YYYY-MM-DD), and delete entries that stop being true.
 
-## Status (2026-11-15)
+## Status (2026-11-16)
 
+- `main` has, unreleased: paste and selected text (2026-11-15), and the six improvements the owner asked for on 2026-11-16 (unit defaults, Indonesian, several targets, more units, several parts and fractions, the smaller requests), with the cups and hands bugs fixed. 94 tests pass on both Pythons; 6,000 random queries ran with no crash; a keystroke still takes about 50 ms. Checked on the command line only: the `$ € £ ¥` keywords and the two new settings have not been tried inside Alfred yet.
 - v5.0.2, public at https://github.com/situmorang-com/alfred-calculate-anything, released as `v5.0.2` with `Calculate.Anything.alfredworkflow` attached, and installed on the owner's Mac (where: `docs/LOCAL.md`).
 - Verified in Alfred: `100 usd to idr` (flag, rate age), `1 btc` (IDR, USD and EUR rows), `100 km to miles` (two rows), `time +15 days`, `vat 400`, `color #ff6600` (swatches), and `1password` (no rows from this workflow). Return copied `1,822,936.37`, ⌘ Return `1822936.37`, ⌥ Return `18229.363747`.
-- Verified offline: the 67 tests on Python 3.9.6 and 3.15; a fuzz run of 12,000 random queries (numbers, units, keywords, junk, odd settings) with no crash after fixing the one it found.
+- Verified offline for 5.0.2 (2026-11-15): the 67 tests then on Python 3.9.6 and 3.15; a fuzz run of 12,000 random queries (numbers, units, keywords, junk, odd settings) with no crash after fixing the one it found.
 - Not verified yet: the Configure Workflow panel in Alfred, `_caclear` inside Alfred, the Fixer and CoinMarketCap key paths (no keys to test with), Spanish and Swedish inside Alfred.
 
 ## Decisions
@@ -72,6 +73,34 @@ No other workflow is worth switching to; the gaps found are coverage, ranked in 
 - **wolph/alfred-converter** is the best-kept Alfred unit calculator (Python 3, updated 2026-09). It does arithmetic with units, number bases and fractions, takes keyless daily rates from fawazahmed0, and gets its units from the Energistics (POSC) dictionary. It has no license file: take ideas, never code. It uses the same trick of one trigger per first character.
 - **alijanah/calculate-anything-alfred** (MIT, 2026-08) covers only currency, weight, distance and temperature, but it lets the user choose default targets for each kind, and adds `$ € £ ¥` triggers.
 - **Soulver's unit reference** (documentation.soulver.app; Raycast's calculator is built on Soulver) is the best list of the units people need: 30 kinds, of which this workflow has 13: its 11 kinds of unit, plus data storage and CSS sizes. Raycast's manual shows the input forms people expect, such as `6′2″ to m`, `transfer 1 TB at 100 Mbps` and `days left in this month`.
+
+### A unit with no target (2026-11-16, owner)
+
+`100 kg`, `72 f`, `2 cups` convert to the other measurement system, or to the Default units setting. Three other converters do the same (Convert, the tinkertrain fork, alijanah's workflow). To keep ordinary Alfred searches quiet: time, angles, frequency and one-system units (`mg`) have no default; `k`, `t`, `st`, `pt` and `n` typed alone never convert (`10k`, `1t`, `1st`, `12pt`), and `kn` alone is a knot, not a kilonewton; a fallback reading counts only where `FALLBACKS` says so (`12 oz` gives grams and millilitres, `2 tb` nothing). Units answer before money, which fixed `2 cups` showing Cuban pesos (CUP), the bug the tinkertrain fork also hit.
+
+### `h` is an hour (2026-11-16)
+
+Upstream made `h` the hand, so `90 m to h` converted metres to hands (upstream #81). Hands are now `hh`, the abbreviation horse people use, and `hand`, `hands`.
+
+### Indonesian through "Also understand" (2026-11-16, owner)
+
+The owner reads results in English but writes amounts the Indonesian way. So besides the `id_ID` language, an "Also understand" setting layers another language's words under the display language, and on Automatic picks Indonesian for a Mac whose language or region is Indonesian. Choices:
+- `m` stays a million. Indonesian writing uses M for miliar (`Rp 1,5 M`), but English uses m for million and one letter can't be both; `miliar` is spelled out.
+- `rb`, `jt`, `juta`, `miliar` with no currency after them mean the local currency, since that shorthand only ever means rupiah (`500rb`). English multipliers (`10k`) still need a currency.
+- A tumbak (also bata, ru) is 14 m², the value most sources give; one source gives 56 m² (4 bata). It varies by region, and certificates use m².
+- `minggu` is a week, so Sunday is `hari minggu`; Sunday's short name in the strings is `Mgg`, because `Min` would turn `30 min` into Sunday.
+
+### Bits and bytes by case (2026-11-16)
+
+Lower-casing the query hid the difference between `Mb/s` and `MB/s`. `app.auto` keeps the typed text in `ctx.typed`, and `units.rate_unit` decides: in mixed case the letter does (b bit, B byte); in one case, habit does (`mbps` megabits, as internet plans quote; `mb/s` megabytes, as `mb` is a megabyte in data storage).
+
+### Prefixed units are listed, not generated (2026-11-16)
+
+Generating SI prefixes was planned and dropped: with lower-cased input, `MHz` and `mHz`, `MW` and `mW` are the same word. Each unit is listed with the common reading (megahertz, megawatt).
+
+### Currency symbols as keywords (2026-11-16)
+
+`$`, `€`, `£` and `¥` are keywords like the digits, so `$100 to idr` needs no `calc`; they add no hint rows, so `$` before anything else stays an ordinary search. `Rp` and `RM` are not keywords: Alfred would run the filter for every query that starts with those letters (`rpm`, `rmdir`). They work after the amount (`150000 rp`) or with `calc`.
 
 ### Docs live in this folder (2026-11-15, owner)
 
@@ -146,3 +175,4 @@ The free currency sources agreed within 0.25% on 16 sampled currencies.
 
 - 2026-11-13: Studied upstream 4.0.7 and its 30 open issues, probed rate sources, rebuilt the workflow in Python, wrote the 66 tests.
 - 2026-11-15: Installed and checked in Alfred. Fuzzing found a crash on date formats that print nothing; fixed. Added `"` and `'` as inches and feet. The owner kept `time`. Added these docs and `tools/alfredctl.swift`. Set the VAT default to Indonesia's 11% and accepted `ppn` (5.0.1). Published to GitHub. Added MYR to the default base currencies. Checking the manual's examples found two date bugs, both fixed: `days until 1 january` counted to the past January, and the timespan row compared clock times across zones (`time 9am in new york` said 13 hours instead of 1). Wrote `docs/MANUAL.md`, with appendices generated from the code. Released 5.0.2. Compared with Vítor Galvão's Currency Converter (same exchangerate-api.com rates, identical results), then added its paste-to-app and Universal Action, plus a hotkey and the `calc` keyword.
+- 2026-11-16: Compared with Dean Jackson's Convert and other converters (see "What other converters do"). The owner asked for the six improvements found: built as above, with the manual's appendices regenerated from the code.
