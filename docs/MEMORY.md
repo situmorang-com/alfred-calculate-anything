@@ -4,7 +4,7 @@ Shared memory for everyone who works on this workflow, person or agent, whicheve
 
 ## Status (2026-11-15)
 
-- v5.0.1, public at https://github.com/situmorang-com/alfred-calculate-anything and installed on the owner's Mac (where: `docs/LOCAL.md`).
+- v5.0.1, public at https://github.com/situmorang-com/alfred-calculate-anything, released as `v5.0.1` with `Calculate.Anything.alfredworkflow` attached, and installed on the owner's Mac (where: `docs/LOCAL.md`).
 - Verified in Alfred: `100 usd to idr` (flag, rate age), `1 btc` (IDR, USD and EUR rows), `100 km to miles` (two rows), `time +15 days`, `vat 400`, `color #ff6600` (swatches), and `1password` (no rows from this workflow). Return copied `1,822,936.37`, ⌘ Return `1822936.37`, ⌥ Return `18229.363747`.
 - Verified offline: the 66 tests on Python 3.9.6 and 3.15; a fuzz run of 12,000 random queries (numbers, units, keywords, junk, odd settings) with no crash after fixing the one it found.
 - Not verified yet: the Configure Workflow panel in Alfred, `_caclear` inside Alfred, the Fixer and CoinMarketCap key paths (no keys to test with), Spanish and Swedish inside Alfred.

@@ -55,5 +55,6 @@ Run from this folder.
 | Download rates now | `/usr/bin/python3 calculate.py --refresh` (or `--refresh currency`, `--refresh crypto`) |
 | Delete cached rates | `/usr/bin/python3 calculate.py --clear` |
 | Package | `zip -r -FS -X -q "../../../dist/Calculate Anything.alfredworkflow" . -x '*.DS_Store' -x '*__pycache__*' -x 'prefs.plist' -x '.git/*' -x '.gitignore' -x 'docs/LOCAL.md'` |
+| Release (owner asks; version bumped, committed, pushed) | Package, copy it to a scratch folder as `Calculate.Anything.alfredworkflow`, then `gh release create v<version> <that file> --target main --title "Calculate Anything <version>" --notes-file <notes>` |
 
 Command-line runs share Alfred's real cache in `~/Library/Application Support/Alfred/Workflow Data/com.situmorang.calculateanything/`. To experiment without touching it, point `alfred_workflow_data` at a scratch folder; the test suite does this itself.

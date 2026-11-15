@@ -10,9 +10,11 @@ This is a rebuild of [Calculate Anything by Biati Digital](https://github.com/bi
 
 ## Install
 
-You need Alfred 5 with the Powerpack, and Apple's command line developer tools for `/usr/bin/python3` (if macOS offers to install them the first time, accept, or run `xcode-select --install`).
+Download **Calculate.Anything.alfredworkflow** from the [latest release](https://github.com/situmorang-com/alfred-calculate-anything/releases/latest) and double-click it.
 
-Clone this repository into Alfred's workflows folder. To find that folder, right-click any workflow in Alfred Preferences, choose **Open in Finder**, and go up one level. Then:
+You need Alfred 5 with the Powerpack, and Apple's command line developer tools for `/usr/bin/python3` (if macOS offers to install them the first time, accept, or run `xcode-select --install`). If you still have the original Calculate Anything installed, disable it so results don't show twice.
+
+To follow development instead, clone this repository into Alfred's workflows folder. To find that folder, right-click any workflow in Alfred Preferences, choose **Open in Finder**, and go up one level. Then:
 
 ```bash
 git clone https://github.com/situmorang-com/alfred-calculate-anything.git user.workflow.calculate-anything
