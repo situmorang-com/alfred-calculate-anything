@@ -3675,7 +3675,7 @@ Exchange rates: exchangerate-api.com, fawazahmed0/exchange-api, frankfurter.dev,
 		<string>apikey_coinmarket</string>
 	</array>
 	<key>version</key>
-	<string>5.0.1</string>
+	<string>5.0.2</string>
 	<key>webaddress</key>
 	<string></string>
 </dict>

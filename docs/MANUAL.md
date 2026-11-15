@@ -1,6 +1,6 @@
 # Calculate Anything: user manual
 
-For version 5.0.1 on Alfred 5 with the Powerpack. The example results were taken on 15 November 2026; exchange rates and prices change every day.
+For version 5.0.2 on Alfred 5 with the Powerpack. The example results were taken on 15 November 2026; exchange rates and prices change every day.
 
 ## Contents
 

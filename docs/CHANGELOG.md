@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 5.0.2 (2026-11-15)
 
 - Base currencies default to this Mac's currency plus USD, EUR and MYR.
 - `time days until 1 january` counts to the coming 1 January, and `days since 25 december` from the last one.

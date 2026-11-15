@@ -2,7 +2,7 @@
 
 | | |
 | --- | --- |
-| Status | v5.0.1, installed and in daily use since 2026-11-15 |
+| Status | v5.0.2, installed and in daily use since 2026-11-15 |
 | Owner | Edmund Situmorang |
 | Based on | [biati-digital/alfred-calculate-anything](https://github.com/biati-digital/alfred-calculate-anything) 4.0.7 (MIT, archived in 2024) |
 
