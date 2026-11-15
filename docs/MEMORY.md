@@ -63,6 +63,16 @@ The owner asked for two things only Vítor Galvão's Currency Converter did: pas
 
 Convert 3.5.1 (2021) is still installed on the owner's Mac but cannot run: it calls `/usr/bin/python`, Python 2, which macOS removed, its exchange rates need an openexchangerates.org key, and its crypto source, CryptoCompare, now answers 401 without a key. It vendored the Pint units library and the Alfred-Workflow library, both Python 2. The same three ways of dying (a runtime macOS drops, keyed APIs, vendored libraries) are what this rebuild avoids. Ideas worth taking are in `docs/PRD.md`, "Backlog": defaults for units typed with no target (Convert learns them from ⌘ on a result), SI prefixes and compound units, an info menu, custom units, update notices. It also confirmed two choices made here: refreshing rates in the background with `rerun`, and showing more decimals until a small result is non-zero.
 
+### What other converters do (2026-11-16)
+
+No other workflow is worth switching to; the gaps found are coverage, ranked in `docs/PRD.md`, "Backlog". Where to look next time:
+
+- **The original's issue tracker** (174 issues) is the best record of what users want. About half are currency breakage from keyed APIs, which the keyless sources here avoid. The rest are mostly requests for more units and input forms.
+- **Forks of the original:** 28 were pushed after it was archived (2024-02-20), almost all PHP patches (other rate APIs, PHP 8, a Dutch translation, currency aliases). The most thorough, tinkertrain 4.2.0 (2026-09), fixed bugs in every calculator. Running its fix list here found none of them, apart from the CUP currency code colliding with cups. It also converts single-unit queries to metric defaults. It still needs PHP, which macOS doesn't ship, and it dropped crypto, CSS sizes, data storage and translations. taasaa rewrote the original in TypeScript for Bun.
+- **wolph/alfred-converter** is the best-kept Alfred unit calculator (Python 3, updated 2026-09). It does arithmetic with units, number bases and fractions, takes keyless daily rates from fawazahmed0, and gets its units from the Energistics (POSC) dictionary. It has no license file: take ideas, never code. It uses the same trick of one trigger per first character.
+- **alijanah/calculate-anything-alfred** (MIT, 2026-08) covers only currency, weight, distance and temperature, but it lets the user choose default targets for each kind, and adds `$ € £ ¥` triggers.
+- **Soulver's unit reference** (documentation.soulver.app; Raycast's calculator is built on Soulver) is the best list of the units people need: 30 kinds, of which this workflow has 13: its 11 kinds of unit, plus data storage and CSS sizes. Raycast's manual shows the input forms people expect, such as `6′2″ to m`, `transfer 1 TB at 100 Mbps` and `days left in this month`.
+
 ### Docs live in this folder (2026-11-15, owner)
 
 So any LLM tool can continue the work from the folder. `AGENTS.md` is canonical; `CLAUDE.md` and `GEMINI.md` import it. Project knowledge goes here rather than into one tool's private memory.

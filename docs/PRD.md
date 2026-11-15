@@ -121,14 +121,22 @@ What users type for each feature, with examples, is in `docs/MANUAL.md`. These a
 
 ## Backlog
 
-- Indonesian: an `id_ID` language with `juta`, `ribu`, `miliar` and `ke`. Today `1,5 juta idr ke usd` gives nothing.
-- From upstream requests: number bases (#121), scientific notation (#110), Indian digit grouping (#61), more imperial units (#122).
+Ranked on 2026-11-16, most useful first, from the requests in the original's issue tracker (`#` numbers are issues at github.com/biati-digital/alfred-calculate-anything), what Dean Jackson's Convert, Soulver, Raycast and other Alfred converters do, and each request run against this workflow. `docs/MEMORY.md`, "What other converters do", has the sources.
 
-Ideas from Dean Jackson's Convert (compared on 2026-11-15; see `docs/MEMORY.md`), most useful first:
+Bugs:
 
-- Units with no target: `72 f`, `100 km` and `10 kg` give nothing today. Convert them to sensible defaults, such as the other measurement system, and let the user choose their own. Convert saves a default when you press ⌘ on a result.
-- SI prefixes and more kinds of unit: frequency (`GHz`), force (`kN`, `lbf`), data rates (`Mbps`, `MB/s`), fuel economy (`km/l`, `l/100km`, `mpg`), troy ounces and carats, acceleration, density, `rpm`. Convert gets these from the Pint library.
-- A `ca` menu inside Alfred: rates status and refresh, searchable lists of currencies and units, edit your own words, open the manual, check for a newer release.
-- Custom units, not only custom words, in `custom-keys.json`.
-- A clear row instead of silence when `/usr/bin/python3` is missing: the launcher can check `xcode-select -p` first.
-- Leave out the mixed-units row when floating point can't support it: `1 ly km` adds "9,460,730,472,580 km, 800.78 m".
+- `2 cups` (and `2 cup`) with no target converts Cuban pesos: units answer nothing without a target, so the currency code CUP matches. Item 1 fixes it; a unit word should beat a currency code when nothing else says money.
+- `90 m to h` converts metres to hands, because `h` is the hand's symbol and `m` never falls back to minutes (#81). Keep `hand` and `hands` as words and let `h` mean hour.
+
+Features:
+
+1. Units with no target: `100 kg`, `72 f` and `1.3 km` give nothing. Convert to the other measurement system by default (kg to lb, °F to °C, km to mi) and let the user choose their own defaults. Convert, the tinkertrain fork and alijanah's workflow all do this; Convert saves a default when you press ⌘ on a result.
+2. Indonesian: an `id_ID` language with `ke` for "to"; number words and their shorthand, `ribu`/`rb`, `juta`/`jt`, `miliar`, `triliun` (`500rb`, `1,5jt idr ke usd`, `2 juta rupiah`); and the units still in daily use: `ons` (100 g), `kuintal` (100 kg), `are` (100 m²), `hektar`, and `tumbak`, `bata` and `ru` for land (about 14 m², varying by region; certificates use m²).
+3. Several targets at once: `100 usd to idr eur myr` gives nothing. It is the original's most discussed request (#1).
+4. Everyday units that Soulver has and this lacks: data rates and download time (`100 Mbps to MB/s`, `4 GB at 50 Mbps`; #24), fuel economy (`km/l`, `l/100km`, `mpg`), frequency (`Hz` to `GHz`), force (`N`, `kN`, `lbf`), acceleration (`m/s²`, `g`), `rpm`, troy ounces and carats, `MW` and `GW`, `ppi`. Generate the SI prefixes once instead of listing each prefixed unit.
+5. Feet and inches, and fractions, as input: `5'11"`, `5 ft 11 in to cm`, `1/8 in to mm`, `1 1/2 cups to ml` (#8, #79). Output already gives `5 ft, 10.87 in`.
+6. A `ca` menu inside Alfred, like Convert's `convinfo`: rates status and refresh, searchable lists of currencies and units, edit your own words, open the manual, check for a newer release.
+7. Smaller requests: number bases (`255 to hex`, #121); scientific notation (`1e6 usd to idr`, #110); Indian `lakh` and `crore` (#61); `tb` as tablespoon next to a volume (#170); `fortnight`; `145 min to timespan`; gold and silver (`xau`, `xag`: fawazahmed0 has them, open.er-api does not); `$100` typed with no keyword, through `$ € £ ¥` triggers as alijanah's workflow has; Raycast's `15% tip on 80` and `15% decrease from 813`; and the dates `monday in 3 weeks`, `week 44 2026` and `days left in this month`.
+8. Custom units, not only custom words, in `custom-keys.json`.
+9. A clear row instead of silence when `/usr/bin/python3` is missing: the launcher can check `xcode-select -p` first.
+10. Leave out the mixed-units row when floating point can't support it: `1 ly km` adds "9,460,730,472,580 km, 800.78 m".
