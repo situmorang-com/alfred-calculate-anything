@@ -123,3 +123,12 @@ What users type for each feature, with examples, is in `docs/MANUAL.md`. These a
 
 - Indonesian: an `id_ID` language with `juta`, `ribu`, `miliar` and `ke`. Today `1,5 juta idr ke usd` gives nothing.
 - From upstream requests: number bases (#121), scientific notation (#110), Indian digit grouping (#61), more imperial units (#122).
+
+Ideas from Dean Jackson's Convert (compared on 2026-11-15; see `docs/MEMORY.md`), most useful first:
+
+- Units with no target: `72 f`, `100 km` and `10 kg` give nothing today. Convert them to sensible defaults, such as the other measurement system, and let the user choose their own. Convert saves a default when you press ⌘ on a result.
+- SI prefixes and more kinds of unit: frequency (`GHz`), force (`kN`, `lbf`), data rates (`Mbps`, `MB/s`), fuel economy (`km/l`, `l/100km`, `mpg`), troy ounces and carats, acceleration, density, `rpm`. Convert gets these from the Pint library.
+- A `ca` menu inside Alfred: rates status and refresh, searchable lists of currencies and units, edit your own words, open the manual, check for a newer release.
+- Custom units, not only custom words, in `custom-keys.json`.
+- A clear row instead of silence when `/usr/bin/python3` is missing: the launcher can check `xcode-select -p` first.
+- Leave out the mixed-units row when floating point can't support it: `1 ly km` adds "9,460,730,472,580 km, 800.78 m".

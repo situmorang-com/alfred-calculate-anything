@@ -59,6 +59,10 @@ The owner asked for Indonesian VAT. Indonesia's PPN has been 12% by law since 20
 
 The owner asked for two things only Vítor Galvão's Currency Converter did: pasting a result into the front app, and converting selected text through a Universal Action or hotkey. Paste sits on ⌃ Return because ⌘ and ⌥ keep their upstream meanings (plain number, one-unit rate). Selected text goes to a `calc` keyword, since a Script Filter opened by a trigger shows its keyword and the text in Alfred's search field; `cc` and `conv` were taken by other workflows. The same change made numbers that read only one way (`1.500.000`, `1.500,50`) parse that way, regardless of the decimal-separator setting; before, `1.500.000 idr` with the default setting read as 1.5.
 
+### Lessons from Dean Jackson's Convert (2026-11-15)
+
+Convert 3.5.1 (2021) is still installed on the owner's Mac but cannot run: it calls `/usr/bin/python`, Python 2, which macOS removed, its exchange rates need an openexchangerates.org key, and its crypto source, CryptoCompare, now answers 401 without a key. It vendored the Pint units library and the Alfred-Workflow library, both Python 2. The same three ways of dying (a runtime macOS drops, keyed APIs, vendored libraries) are what this rebuild avoids. Ideas worth taking are in `docs/PRD.md`, "Backlog": defaults for units typed with no target (Convert learns them from ⌘ on a result), SI prefixes and compound units, an info menu, custom units, update notices. It also confirmed two choices made here: refreshing rates in the background with `rerun`, and showing more decimals until a small result is non-zero.
+
 ### Docs live in this folder (2026-11-15, owner)
 
 So any LLM tool can continue the work from the folder. `AGENTS.md` is canonical; `CLAUDE.md` and `GEMINI.md` import it. Project knowledge goes here rather than into one tool's private memory.
