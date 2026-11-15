@@ -15,6 +15,7 @@ calculate.py        argv → (action, query). --refresh and --clear are sub-comm
 ca/app.py run()     Context(settings, language) → one calculator → {"items": [...], "rerun": seconds?}
   │   no keyword:   units → percentage → pxemrem → vat → datastorage → money   (the first one that answers wins)
   │   keywords:     timecalc.keyword · vat.keyword · color.keyword
+  │   calc, Universal Action, hotkey:  app.selection (reshapes the text, then any of the above)
   ▼
 JSON on stdout → Alfred shows the rows → Return / ⌘ Return / ⌥ Return → Copy to Clipboard
 ```
@@ -52,11 +53,12 @@ Each module's docstring lists the query forms it accepts.
 
 - One Script Filter per possible first character: keywords `0` to `9`, `.` and `-`, with "with space" off and the argument optional. Typing `100 usd` matches keyword `1` with argument `00 usd`, and the script puts the `1` back. The `.` and `-` filters call `--dot` and `--neg`, which restore `0.` or `-` and send nothing unless a digit follows.
 - Keyword Script Filters for `{var:keyword_time}`, `{var:keyword_vat}` and `{var:keyword_color}` (configurable, defaulting to `time`, `vat` and `color`), argument required.
+- A `{var:keyword_calc}` Script Filter (default `calc`, argument optional) runs `--any`. The Universal Action (named Calculate Anything, text only) and an unassigned hotkey (argument: selection in macOS) both connect to it, so Alfred opens `calc <selected text>` and the text stays editable.
 - Every Script Filter uses script language 11 (`/bin/zsh --no-rcs`), receives the query as `$1`, has Alfred's own filtering off, runs immediately, and uses queue mode 2, so a new keystroke terminates the running script.
-- Each filter connects to the single Copy to Clipboard output three times: plain (modifiers `0`), ⌘ (`1048576`) and ⌥ (`524288`). The output copies `{query}`, which is the row's `arg` or the modifier's `arg`.
+- Each filter connects to the Copy to Clipboard output three times, plain (modifiers `0`), ⌘ (`1048576`) and ⌥ (`524288`), and to a second Copy to Clipboard output with auto-paste on ⌃ (`262144`). Both copy `{query}`: the row's `arg`, or the modifier's `arg`. Rows define no `ctrl` modifier, so ⌃ pastes the row's `arg`. `tests/test_calculate.py` checks this wiring.
 - `_caclear` keyword → Run Script `calculate.py --clear` → Post Notification.
 - The time filter's icon is the PNG named after its UID (`301DCF01-…png`). Rows without an icon of their own use their filter's icon, or `icon.png`.
-- The configuration panel (`userconfigurationconfig`) defines 19 variables. Alfred passes them to the script as environment variables and stores the owner's values in `prefs.plist` in this folder.
+- The configuration panel (`userconfigurationconfig`) defines 20 variables. Alfred passes them to the script as environment variables and stores the owner's values in `prefs.plist` in this folder.
 
 ## Settings
 
@@ -81,7 +83,8 @@ Each module's docstring lists the query forms it accepts.
 - `clean_query` composes Unicode (Alfred delivers decomposed accents), maps `µ` to `μ`, `²` to `2`, `³` to `3` and non-breaking spaces to spaces, collapses whitespace and lower-cases.
 - `split_amount` takes the leading number with `core.NUMBER`: `1350.5`, `1,350.50`, `1.350,50`, `.5`, and spaces only as real thousands groups (`1 000 000`, never `20 20`).
 - `term_splits(rest, stop_words)` yields every reading of `<from> [stop word] <to>`, splits at stop words first, then at each space. Multi-word terms (`us dollars`, `miles per hour`) and stop words that are also units (`100 cm in in`) both work. A calculator takes the first reading it can resolve.
-- `parse_number` follows the decimal-separator setting.
+- `parse_number` reads a number that reads only one way as such: a mark used twice groups thousands (`1.500.000`), and with both marks the last one is the decimal point (`1.500,50`). Only an ambiguous number (`1,500`) follows the decimal-separator setting.
+- `app.selection_query` reshapes text from other apps: it drops words before the first number, and moves a currency written before the amount (`$25`, `Rp 1.500.000`, `USD 100`) behind it. `app.selection` then tries a color, the no-keyword calculators, and for 10 or 13 digits or a month name the `time` keyword, before showing a hint.
 
 ## Numbers
 

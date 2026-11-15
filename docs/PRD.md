@@ -40,7 +40,7 @@ What users type for each feature, with examples, is in `docs/MANUAL.md`. These a
 ### Currency (C)
 
 - C1. About 170 ISO currencies, recognised by code (`idr`), symbol (`Rp`, `€`, `RM`), name (`rupiah`, `swiss francs`) or keyword-file word, in English and the configured language.
-- C2. `<amount> <from> [to|in|as|=] <to>`, with or without spaces (`100usd yen`).
+- C2. `<amount> <from> [to|in|as|=] <to>`, with or without spaces (`100usd yen`). Thousands may be grouped with commas, dots or spaces; only a number that reads two ways (`1,500`) follows the decimal-separator setting.
 - C3. With no target, convert to the base-currencies setting; empty means this Mac's local currency, then USD, EUR and MYR (MYR at the owner's request). A currency is never converted to itself.
 - C4. Amount multipliers: `k`, `m`, `b`, `t`, `thousand`, `million`, `billion`, `trillion`, and the Spanish and Swedish words.
 - C5. Rates come from free public sources tried in order; an optional Fixer key is tried first.
@@ -95,8 +95,10 @@ What users type for each feature, with examples, is in `docs/MANUAL.md`. These a
 ### General (G)
 
 - G1. English, Spanish and Swedish for results and typed words; English words work in every language. Personal words in `custom-keys.json` in the workflow's data folder survive updates.
-- G2. Settings live in Alfred's Configure Workflow panel (see `docs/MANUAL.md`), including the three keywords.
+- G2. Settings live in Alfred's Configure Workflow panel (see `docs/MANUAL.md`), including the four keywords.
 - G3. `_caclear` deletes the cached rates.
+- G4. ⌃ Return pastes a result into the app the user was in.
+- G5. Text from other apps: a Universal Action, an optional hotkey and the `calc` keyword read selected text, including amounts written symbol first (`$25`, `Rp 1.500.000`, `USD 100 to IDR`), colors and Unix timestamps.
 
 ## Non-functional requirements
 

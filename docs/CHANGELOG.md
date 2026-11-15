@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- ⌃ Return pastes a result into the app you were using.
+- Convert selected text from any app: the **Calculate Anything** Universal Action, an optional hotkey, and a new `calc` keyword that reads amounts written symbol first (`$25`, `Rp 1.500.000`, `USD 100 to IDR`), colors and Unix timestamps.
+- Numbers that can only be read one way are read that way: `1.500.000` is one and a half million and `1.500,50` is 1500.5, whatever the decimal-separator setting.
+
 ## 5.0.2 (2026-11-15)
 
 - Base currencies default to this Mac's currency plus USD, EUR and MYR.

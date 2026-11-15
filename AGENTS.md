@@ -52,6 +52,7 @@ Run from this folder.
 | Tests | `/usr/bin/python3 tests/test_calculate.py` |
 | A query typed with no keyword | `/usr/bin/python3 calculate.py "100 usd to idr"` |
 | A keyword query | `/usr/bin/python3 calculate.py --time "+15 days"` (also `--vat`, `--color`) |
+| What `calc`, the Universal Action and the hotkey send | `/usr/bin/python3 calculate.py --any "Rp 1.500.000"` |
 | What the `.` and `-` triggers send | `/usr/bin/python3 calculate.py --dot "5 km to m"`, `--neg "25f to c"` |
 | Download rates now | `/usr/bin/python3 calculate.py --refresh` (or `--refresh currency`, `--refresh crypto`) |
 | Delete cached rates | `/usr/bin/python3 calculate.py --clear` |

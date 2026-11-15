@@ -117,11 +117,14 @@ Reads hex, rgb(a), hsl(a), hwb, hsv, cmyk, lab, oklch and CSS color names.
 
 ## On a result
 
-| Key | Copies |
+| Key | What it does |
 | --- | --- |
-| Return | the value as shown, for example `2,376.54` |
-| ⌘ Return | the value without formatting, `2376.54` |
-| ⌥ Return | the value of one unit (currency), or the value with its unit (units) |
+| Return | copies the value as shown, for example `2,376.54` |
+| ⌘ Return | copies the value without formatting, `2376.54` |
+| ⌥ Return | copies the value of one unit (currency), or the value with its unit (units) |
+| ⌃ Return | pastes the value into the app you were using |
+
+Select an amount in any app (`$25`, `Rp 1.500.000`) and choose **Calculate Anything** from Alfred's Universal Actions to convert it, or type it after the `calc` keyword.
 
 ## Manual
 

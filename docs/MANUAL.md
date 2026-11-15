@@ -42,6 +42,7 @@ Four keywords cover the rest:
 | `time` | dates, times and time zones | `time +15 days` |
 | `vat` | a VAT breakdown | `vat 400` |
 | `color` | color formats | `color #ff6600` |
+| `calc` | text that doesn't start with a number, and text sent from other apps | `calc $25`, `calc Rp 1.500.000` |
 | `_caclear` | deleting the cached exchange rates | `_caclear` |
 
 A query without a keyword must start with a number (a leading `.` or `-` works too: `.5 km to m`, `-25f to c`) and be at least three characters long. Everything else is left to Alfred, so ordinary searches such as `1password` are unaffected.
@@ -55,11 +56,20 @@ The first currency or crypto query after installing shows **Updating rates...** 
 | Return | the result as shown, for example `1,822,936.37` |
 | ⌘ Return | the number without formatting, `1822936.37` (currency, crypto, units, data storage, percentages, VAT) |
 | ⌥ Return | currency and crypto: the rate for one unit, `18229.363747`; units and data storage: the result with its unit, `62.13711922 mi` |
+| ⌃ Return | the result as shown, and pastes it into the app you were using |
 | ⌘C | the selected row's value |
 | ⌘L | the result in Large Type |
 | ⌘1 to ⌘9 | the first to ninth row (an Alfred shortcut) |
 
 Where a result has no ⌘ or ⌥ variant (CSS sizes, dates, colors), those keys copy what the row shows.
+
+### Converting text from other apps
+
+Select an amount anywhere, such as `$25`, `Rp 1.500.000` or `USD 100 to IDR` in a web page or an email, open Alfred's Universal Actions for the selection (⌥⌘\\ by default), and choose **Calculate Anything**. Alfred opens the `calc` keyword with the text, so you can still add to it, for example a target currency.
+
+- To skip the actions list, give the workflow's **Hotkey** a key: in Alfred Preferences, open the workflow and double-click the hotkey object. It sends the selected text the same way.
+- `calc` reads amounts written symbol first (`$25`, `RM 50`, `US$ 1,234.50`), ignores words before the amount (`costs about $25.`), converts a color (`#ff6600`), and shows the date for a Unix timestamp (`1577836800`).
+- A number alone (`1.500.000`) asks for a unit: type it after the number, as in `calc 1.500.000 idr`.
 
 ## 3. Currency
 
@@ -99,7 +109,7 @@ Set them in **Base currencies**, for example `IDR, SGD, USD`. Left empty, they a
 
 ### Amounts
 
-- Separators: `1,350.50`, `1 350.50` and `.5` all work. If you write decimals with a comma (`1.350,50`), set **Input decimal separator** to Comma.
+- Separators: `1,350.50`, `1 350.50`, `1.500.000`, `1.350,50` and `.5` all work. Only a number that reads two ways, such as `1,500`, depends on **Input decimal separator**: Dot reads it as 1500, Comma as 1.5.
 - Multipliers: `k`, `thousand`, `m`, `mn`, `mio`, `million`, `b`, `bn`, `billion`, `t`, `tn`, `trillion` (`150k`, `2.5m`, `3 billion`). They apply to money only, so `5 m to ft` is five metres.
 - Results show 2 decimals (**Currency decimals**). Very small results keep their significant digits instead of showing 0.00: `1 idr to usd` gives 0.000055 USD.
 
@@ -317,7 +327,7 @@ Open Alfred Preferences, choose Workflows, select Calculate Anything, and click 
 | Data storage: Binary mode | off | On: 1 MB = 1024 kB. |
 | Refresh currency rates every | 6 hours | How often rates download. |
 | Refresh crypto prices every | 0.25 hours | How often coin prices download. |
-| Time keyword, VAT keyword, Color keyword | `time`, `vat`, `color` | Rename a keyword if another workflow uses it. |
+| Time keyword, VAT keyword, Color keyword, Calc keyword | `time`, `vat`, `color`, `calc` | Rename a keyword if another workflow uses it. |
 | Fixer API key | empty | Optional; asked first for exchange rates. |
 | CoinMarketCap API key | empty | Optional; asked first for coin prices. |
 
@@ -337,6 +347,8 @@ Open Alfred Preferences, choose Workflows, select Calculate Anything, and click 
 **"Updating rates..." stays, or "Unable to get currencies data" appears.** The rates could not be downloaded. Check the internet connection and try again in a minute. Rates downloaded earlier, if any, keep working.
 
 **A rate looks out of date.** The subtitle shows its age. The free sources publish once a day; lower **Refresh currency rates every** to check more often, or type `_caclear` to download now.
+
+**⌃ Return copies but doesn't paste.** Alfred needs permission to paste: in System Settings, open Privacy & Security, then Accessibility, and turn Alfred on.
 
 **Every result appears twice.** The original Calculate Anything is still installed. Disable it in Alfred Preferences.
 

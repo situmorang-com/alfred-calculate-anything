@@ -6,6 +6,7 @@
     calculate.py --dot "5km to m"      Alfred's "." keyword ate the leading dot: 0.5km
     calculate.py --neg "25f to c"      Alfred's "-" keyword ate the minus sign: -25f
     calculate.py --vat "of 400"        the vat / time / color keywords
+    calculate.py --any "Rp 1.500.000"  the calc keyword, Universal Action and hotkey: any text
     calculate.py --refresh currency    download rates now (normally started in the background)
     calculate.py --clear               delete cached rates
 """
@@ -37,7 +38,7 @@ def main(argv):
             query = ('0.' + query) if query[:1].isdigit() else ''
         elif flag == 'neg':
             query = ('-' + query) if (query[:1].isdigit() or query[:1] == '.') else ''
-        elif flag in ('vat', 'time', 'color'):
+        elif flag in ('vat', 'time', 'color', 'any'):
             action = flag
         else:
             query = ' '.join(args)

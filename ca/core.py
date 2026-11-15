@@ -347,14 +347,23 @@ def lookup(table, term):
 # --------------------------------------------------------------------------- numbers
 
 def parse_number(text, settings):
-    """"1,350.50" / "1 350,50" -> float, honouring the configured decimal separator."""
+    """"1,350.50" / "1 350,50" / "1.500.000" -> float.
+
+    The decimal-separator setting decides a number that reads two ways ("1,500"). A number
+    that reads only one way is read that way: a mark used twice groups thousands
+    ("1.500.000"), and when both marks appear the last one is the decimal point ("1.500,50").
+    """
     raw = str(text).strip().replace(' ', '').replace(' ', '')
     sign = -1.0 if raw.startswith('-') else 1.0
     raw = raw.lstrip('+-')
-    if settings is not None and settings.decimal_separator == 'comma':
-        raw = raw.replace('.', '').replace(',', '.')
-    else:
-        raw = raw.replace(',', '')
+    point = ',' if (settings is not None and settings.decimal_separator == 'comma') else '.'
+    if '.' in raw and ',' in raw:
+        point = '.' if raw.rfind('.') > raw.rfind(',') else ','
+    elif raw.count(point) > 1:
+        point = ',' if point == '.' else '.'
+    raw = raw.replace(',' if point == '.' else '.', '')
+    if point == ',':
+        raw = raw.replace(',', '.')
     match = re.match(r'\d*\.?\d*', raw)
     digits = match.group(0) if match else ''
     if digits in ('', '.'):

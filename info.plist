@@ -40,6 +40,16 @@
 				<key>vitoclose</key>
 				<false/>
 			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
 		</array>
 		<key>0C8138BC-F103-54F1-A1F4-2E3A67C17454</key>
 		<array>
@@ -70,6 +80,16 @@
 				<integer>524288</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -106,6 +126,59 @@
 				<key>vitoclose</key>
 				<false/>
 			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>131BC460-830C-549C-914F-9B5A3483F76F</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A1594904-6033-5414-AAB9-3E3019BF6B16</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>A1594904-6033-5414-AAB9-3E3019BF6B16</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>A1594904-6033-5414-AAB9-3E3019BF6B16</string>
+				<key>modifiers</key>
+				<integer>524288</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
 		</array>
 		<key>23FE0FAF-A621-5AE4-92EC-27565B7068CF</key>
 		<array>
@@ -136,6 +209,16 @@
 				<integer>524288</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -172,6 +255,29 @@
 				<key>vitoclose</key>
 				<false/>
 			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>469D1F50-57F5-5F6F-9392-81B7E87B4229</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>131BC460-830C-549C-914F-9B5A3483F76F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
 		</array>
 		<key>50893C8B-97E1-507A-8938-67A34688BB02</key>
 		<array>
@@ -202,6 +308,16 @@
 				<integer>524288</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -251,6 +367,16 @@
 				<key>vitoclose</key>
 				<false/>
 			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
 		</array>
 		<key>571F27D6-721E-5AA2-A476-9B9040A36635</key>
 		<array>
@@ -281,6 +407,16 @@
 				<integer>524288</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -317,6 +453,16 @@
 				<key>vitoclose</key>
 				<false/>
 			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
 		</array>
 		<key>8D3BBFDA-0F43-55BC-BBDC-F6B05596BB41</key>
 		<array>
@@ -350,6 +496,16 @@
 				<key>vitoclose</key>
 				<false/>
 			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
 		</array>
 		<key>931A08BA-2BC4-5183-BD38-BE08AF442DC4</key>
 		<array>
@@ -362,6 +518,19 @@
 				<string></string>
 				<key>vitoclose</key>
 				<false/>
+			</dict>
+		</array>
+		<key>9B29031E-6929-5B39-B0E3-6AAB68C06FEE</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>131BC460-830C-549C-914F-9B5A3483F76F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<true/>
 			</dict>
 		</array>
 		<key>BE9AA4B5-C0CA-5EB0-86A8-B832E9F101A5</key>
@@ -393,6 +562,16 @@
 				<integer>524288</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -429,6 +608,16 @@
 				<key>vitoclose</key>
 				<false/>
 			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
 		</array>
 		<key>D96CF986-DD08-5BBB-AE98-75A3793BF8B9</key>
 		<array>
@@ -459,6 +648,16 @@
 				<integer>524288</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -495,6 +694,16 @@
 				<key>vitoclose</key>
 				<false/>
 			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
 		</array>
 		<key>F9595FCB-2D08-5B1C-906C-69B323926405</key>
 		<array>
@@ -525,6 +734,16 @@
 				<integer>524288</integer>
 				<key>modifiersubtext</key>
 				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+				<key>modifiers</key>
+				<integer>262144</integer>
+				<key>modifiersubtext</key>
+				<string>Paste into the front app</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -1359,6 +1578,124 @@
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>autopaste</key>
+				<true/>
+				<key>clipboardtext</key>
+				<string>{query}</string>
+				<key>ignoredynamicplaceholders</key>
+				<false/>
+				<key>transient</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.clipboard</string>
+			<key>uid</key>
+			<string>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>{var:keyword_calc}</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
+				<key>runningsubtext</key>
+				<string>Calculating...</string>
+				<key>script</key>
+				<string>PYTHONPYCACHEPREFIX="${alfred_workflow_cache:-/tmp}/pycache" exec /usr/bin/python3 calculate.py --any "$1"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>$25 · Rp 1.500.000 · USD 100 to IDR · #ff6600 · 1577836800</string>
+				<key>title</key>
+				<string>Calculate Anything</string>
+				<key>type</key>
+				<integer>11</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>131BC460-830C-549C-914F-9B5A3483F76F</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>acceptsfiles</key>
+				<false/>
+				<key>acceptsmulti</key>
+				<integer>0</integer>
+				<key>acceptstext</key>
+				<true/>
+				<key>acceptsurls</key>
+				<false/>
+				<key>name</key>
+				<string>Calculate Anything</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.universalaction</string>
+			<key>uid</key>
+			<string>9B29031E-6929-5B39-B0E3-6AAB68C06FEE</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>1</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>469D1F50-57F5-5F6F-9392-81B7E87B4229</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>**Calculate Anything** converts things in natural language, with no keyword: open Alfred and type a number.
@@ -1379,6 +1716,7 @@ A rebuild of [Calculate Anything by Biati Digital](https://github.com/biati-digi
 
 - `time` `now` · `+15 days` · `days until 31 december` · `start of year` · `25 December 2021 - 31 December 2021` · `3pm utc` · `now in tokyo` · `1577836800`
 - `vat` `of 400` shows the tax, the amount with tax, and the amount before tax
+- `calc` any text, including `$25`, `Rp 1.500.000` and `USD 100 to IDR`. The **Calculate Anything** Universal Action and the optional hotkey send selected text here
 - `color` `#ff6600` · `rgb(255, 102, 0) to hex` · `tomato to hsl`
 - `_caclear` deletes the cached rates
 
@@ -1387,6 +1725,7 @@ A rebuild of [Calculate Anything by Biati Digital](https://github.com/biati-digi
 - **Return** copies the formatted value
 - **⌘ Return** copies it without formatting
 - **⌥ Return** copies the value of a single unit (or the value with its unit)
+- **⌃ Return** pastes it into the app you were using
 
 Exchange rates: exchangerate-api.com, fawazahmed0/exchange-api, frankfurter.dev, European Central Bank. Crypto prices: coinpaprika.com, coingecko.com, coinlore.net.
 </string>
@@ -1415,6 +1754,15 @@ Exchange rates: exchangerate-api.com, fawazahmed0/exchange-api, frankfurter.dev,
 			<key>ypos</key>
 			<real>1285.0</real>
 		</dict>
+		<key>131BC460-830C-549C-914F-9B5A3483F76F</key>
+		<dict>
+			<key>note</key>
+			<string>Receives text from the Universal Action and the hotkey, and reads amounts written symbol first.</string>
+			<key>xpos</key>
+			<real>280.0</real>
+			<key>ypos</key>
+			<real>365.0</real>
+		</dict>
 		<key>23FE0FAF-A621-5AE4-92EC-27565B7068CF</key>
 		<dict>
 			<key>note</key>
@@ -1430,6 +1778,15 @@ Exchange rates: exchangerate-api.com, fawazahmed0/exchange-api, frankfurter.dev,
 			<real>280.0</real>
 			<key>ypos</key>
 			<real>20.0</real>
+		</dict>
+		<key>469D1F50-57F5-5F6F-9392-81B7E87B4229</key>
+		<dict>
+			<key>note</key>
+			<string>Unassigned. Set a key to convert the selected text.</string>
+			<key>xpos</key>
+			<real>40.0</real>
+			<key>ypos</key>
+			<real>1515.0</real>
 		</dict>
 		<key>50893C8B-97E1-507A-8938-67A34688BB02</key>
 		<dict>
@@ -1489,6 +1846,15 @@ Exchange rates: exchangerate-api.com, fawazahmed0/exchange-api, frankfurter.dev,
 			<key>ypos</key>
 			<real>620.0</real>
 		</dict>
+		<key>9B29031E-6929-5B39-B0E3-6AAB68C06FEE</key>
+		<dict>
+			<key>note</key>
+			<string>Select text anywhere, open Universal Actions, choose Calculate Anything.</string>
+			<key>xpos</key>
+			<real>40.0</real>
+			<key>ypos</key>
+			<real>1400.0</real>
+		</dict>
 		<key>A1594904-6033-5414-AAB9-3E3019BF6B16</key>
 		<dict>
 			<key>note</key>
@@ -1520,6 +1886,16 @@ Exchange rates: exchangerate-api.com, fawazahmed0/exchange-api, frankfurter.dev,
 			<real>40.0</real>
 			<key>ypos</key>
 			<real>595.0</real>
+		</dict>
+		<key>DA0CBE44-3C54-5E12-9BA3-10B640137DF3</key>
+		<dict>
+			<key>note</key>
+			<string>⌃ Return pastes the result into the app you were using.
+Pasting needs Accessibility permission for Alfred.</string>
+			<key>xpos</key>
+			<real>520.0</real>
+			<key>ypos</key>
+			<real>760.0</real>
 		</dict>
 		<key>EDF0045C-3628-5D2A-9F7E-91438B2CBBE1</key>
 		<dict>
@@ -3625,6 +4001,27 @@ Exchange rates: exchangerate-api.com, fawazahmed0/exchange-api, frankfurter.dev,
 			<string>textfield</string>
 			<key>variable</key>
 			<string>keyword_color</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>calc</string>
+				<key>placeholder</key>
+				<string>calc</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Keyword for any text, such as $25 or Rp 1.500.000. The Universal Action and the hotkey open it with the selected text.</string>
+			<key>label</key>
+			<string>Calc keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>keyword_calc</string>
 		</dict>
 		<dict>
 			<key>config</key>

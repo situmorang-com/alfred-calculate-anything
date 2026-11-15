@@ -106,6 +106,14 @@ class Numbers(Base):
         self.assertEqual(core.parse_number('1.350,50', comma), 1350.5)
         self.assertEqual(core.parse_number('-25', dot), -25.0)
         self.assertEqual(core.parse_number('.250', dot), 0.25)
+        # a number that reads only one way is read that way, whatever the setting
+        self.assertEqual(core.parse_number('1.500.000', dot), 1500000.0)
+        self.assertEqual(core.parse_number('1.500,50', dot), 1500.5)
+        self.assertEqual(core.parse_number('1,500,000', comma), 1500000.0)
+        self.assertEqual(core.parse_number('1,500.50', comma), 1500.5)
+        # one that reads two ways follows the setting
+        self.assertEqual(core.parse_number('1,500', dot), 1500.0)
+        self.assertEqual(core.parse_number('1,500', comma), 1.5)
 
     def test_amount_split(self):
         self.assertEqual(core.split_amount('100km to m'), ('100', 'km to m'))
@@ -619,7 +627,62 @@ class Colors(Base):
         self.assertEqual(titles('#ff0000 to foo', 'color'), ['There is no support for the foo color space yet'])
 
 
+class Selection(Base):
+    """The calc keyword, the Universal Action and the hotkey: text from anywhere."""
+
+    def test_amounts_written_symbol_first(self):
+        self.assertEqual(titles('$25', 'any', base_currencies='MXN'), ['500 MXN'])
+        self.assertEqual(titles('Rp 1.600.000', 'any', base_currencies='USD'), ['100 USD'])
+        self.assertEqual(first('USD 100 to MXN', 'any'), '2,000 MXN')
+        self.assertEqual(first('€1.234,56 to usd', 'any'), '1,371.73 USD')
+        self.assertEqual(first('costs about $25.', 'any', base_currencies='MXN'), '500 MXN')
+        self.assertEqual(first('BTC 0.5 to usd', 'any'), '30,000 USD')
+
+    def test_words_before_the_amount_are_dropped(self):
+        self.assertEqual(first('it is 25 usd', 'any', base_currencies='MXN'), '500 MXN')
+        self.assertEqual(first('roughly 100 km to miles', 'any'), '62.13711922 mi')
+        self.assertEqual(first('a 5 day trip', 'any'), "Calculate Anything can't read this")
+
+    def test_everything_typed_without_a_keyword_works(self):
+        self.assertEqual(first('100 usd to mxn', 'any'), '2,000 MXN')
+        self.assertEqual(first('120 + 30%', 'any'), '156')
+        self.assertEqual(first('400 + vat', 'any'), '464')
+
+    def test_colors_and_timestamps(self):
+        self.assertEqual(first('#ff6600', 'any'), '#ff6600')
+        self.assertEqual(first('rgb(255, 102, 0)', 'any'), '#ff6600')
+        self.assertEqual(first('1577836800', 'any'), '1 January, 2020, 7:00:00 am')
+
+    def test_hints(self):
+        self.assertEqual(first('1.500.000', 'any'), 'Add a unit or currency after the number')
+        self.assertEqual(first('hello world', 'any'), "Calculate Anything can't read this")
+        self.assertEqual(first('', 'any'), 'Calculate Anything')
+
+
 class Dispatch(Base):
+    def test_info_plist_wiring(self):
+        import plistlib
+        with open(os.path.join(ROOT, 'info.plist'), 'rb') as handle:
+            plist = plistlib.load(handle)
+        objects = plist['objects']
+        outputs = [o for o in objects if o['type'] == 'alfred.workflow.output.clipboard']
+        copy = next(o['uid'] for o in outputs if not o['config']['autopaste'])
+        paste = next(o['uid'] for o in outputs if o['config']['autopaste'])
+        filters = [o for o in objects if o['type'] == 'alfred.workflow.input.scriptfilter']
+        self.assertEqual(len(filters), 16)
+        for item in filters:
+            links = set((c['destinationuid'], c['modifiers']) for c in plist['connections'][item['uid']])
+            self.assertEqual(links, {(copy, 0), (copy, 1048576), (copy, 524288), (paste, 262144)},
+                             item['config']['keyword'])
+        calc = next(o['uid'] for o in filters if o['config']['keyword'] == '{var:keyword_calc}')
+        for kind in ('universalaction', 'hotkey'):
+            trigger = next(o['uid'] for o in objects if o['type'].endswith(kind))
+            self.assertEqual([c['destinationuid'] for c in plist['connections'][trigger]], [calc])
+        keywords = dict((f['variable'], f['config']['default']) for f in plist['userconfigurationconfig']
+                        if f['variable'].startswith('keyword_'))
+        self.assertEqual(keywords, {'keyword_time': 'time', 'keyword_vat': 'vat', 'keyword_color': 'color',
+                                    'keyword_calc': 'calc'})
+
     def test_every_reply_is_valid_alfred_json(self):
         for query in ('100 usd to mxn', '100 km to m', '12px', '120 + 30%', '2 gb to mb', '400 + vat', 'zzz', ''):
             reply = ask(query)
