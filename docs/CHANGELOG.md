@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 5.1.0 (2026-11-16)
 
 - ⌃ Return pastes a result into the app you were using.
 - Convert selected text from any app: the **Calculate Anything** Universal Action, an optional hotkey, and a new `calc` keyword that reads amounts written symbol first (`$25`, `Rp 1.500.000`, `USD 100 to IDR`), colors and Unix timestamps.

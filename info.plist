@@ -4533,7 +4533,7 @@ Pasting needs Accessibility permission for Alfred.</string>
 		<string>apikey_coinmarket</string>
 	</array>
 	<key>version</key>
-	<string>5.0.2</string>
+	<string>5.1.0</string>
 	<key>webaddress</key>
 	<string></string>
 </dict>

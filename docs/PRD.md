@@ -2,7 +2,7 @@
 
 | | |
 | --- | --- |
-| Status | v5.0.2 released and in daily use since 2026-11-15; the 2026-11-16 features (unit defaults, Indonesian, several targets, more units, number bases) are on `main`, unreleased |
+| Status | v5.1.0, released 2026-11-16; in daily use since 2026-11-15 |
 | Owner | Edmund Situmorang |
 | Based on | [biati-digital/alfred-calculate-anything](https://github.com/biati-digital/alfred-calculate-anything) 4.0.7 (MIT, archived in 2024) |
 
