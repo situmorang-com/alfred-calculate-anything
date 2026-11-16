@@ -102,6 +102,10 @@ Generating SI prefixes was planned and dropped: with lower-cased input, `MHz` an
 
 `$`, `€`, `£` and `¥` are keywords like the digits, so `$100 to idr` needs no `calc`; they add no hint rows, so `$` before anything else stays an ordinary search. `Rp` and `RM` are not keywords: Alfred would run the filter for every query that starts with those letters (`rpm`, `rmdir`). They work after the amount (`150000 rp`) or with `calc`.
 
+### The README animation is drawn, not recorded (2026-11-16, owner)
+
+The owner asked for an animated demo in the README. It is rendered from the workflow's real answers (`tools/demo/`) rather than recorded from Alfred: a recording needs the Mac hands-off, and every half-typed query (`1`, `100 u`) shows the owner's own Alfred results, such as apps and files, which must not go public. The frames follow Alfred's "Experimental Big Sur Dark" theme from the owner's themes folder (700-wide window, 34pt light search text, 40px icons, #358188 selection). Encoding: ffmpeg with one palette for all frames and ordered dithering (`bayer_scale=3`); error diffusion left red and teal specks at the centre of a background glow and doubled the size. About 1.8 MB for 29 s at 1000 × 536. Redraw it when results or features change (command in `AGENTS.md`).
+
 ### Docs live in this folder (2026-11-15, owner)
 
 So any LLM tool can continue the work from the folder. `AGENTS.md` is canonical; `CLAUDE.md` and `GEMINI.md` import it. Project knowledge goes here rather than into one tool's private memory.

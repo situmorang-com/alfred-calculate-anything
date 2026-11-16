@@ -135,7 +135,11 @@ class Money(object):
         return None
 
     def targets(self, term, explicit=False):
-        """One currency or coin, or several: "idr", "idr eur myr", "idr, eur and myr"."""
+        """One currency or coin, or several: "idr", "idr eur myr", "idr, eur and myr".
+
+        In a list, a one-letter ticker is not a coin, so "100 usd to eur g" (half-typed
+        "gbp") shows nothing rather than euros and the G token.
+        """
         single = self.resolve(term, explicit)
         if single:
             return [single]
@@ -146,6 +150,8 @@ class Money(object):
             for size in (3, 2, 1):
                 piece = words[position:position + size]
                 hit = len(piece) == size and self.resolve(' '.join(piece), explicit)
+                if hit and hit[0] == 'crypto' and len(hit[1]) == 1:
+                    hit = None
                 if hit:
                     if hit not in found:
                         found.append(hit)

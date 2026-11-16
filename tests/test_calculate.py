@@ -523,6 +523,7 @@ class Currency(Base):
         self.assertEqual(titles('100 usd to idr, eur and myr'), ['1,600,000 IDR', '90 EUR', '450 MYR'])
         self.assertEqual(titles('100 usd idr eur'), ['1,600,000 IDR', '90 EUR'])
         self.assertEqual(titles('100 usd to mexican pesos eur'), ['2,000 MXN', '90 EUR'])
+        self.assertEqual(titles('100 usd to eur a'), [])                  # half-typed, not the A token
 
     def test_precious_metals(self):
         self.assertEqual(first('1 xau to usd'), '2,000 USD')

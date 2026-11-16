@@ -2,6 +2,11 @@
 
 An Alfred 5 workflow that converts things in natural language. Open Alfred and type a number: `100 usd to idr`, `100 km in miles`, `120 + 30%`, `2 gb to mb`. No keyword needed.
 
+<p align="center">
+  <img src="docs/images/demo.gif" width="840" alt="Typing into Alfred: 100 usd to eur gbp jpy, 1 btc, 100 kg, 5'11&quot;, 4 gb at 50 mbps, 15% tip on 80 and color #ff6600, with the answers appearing as you type">
+</p>
+<p align="center"><sub>The workflow's real answers, drawn in Alfred's Big Sur Dark theme. Rates as of 16 November 2026.</sub></p>
+
 This is a rebuild of [Calculate Anything by Biati Digital](https://github.com/biati-digital/alfred-calculate-anything), which was archived in 2024 and stopped working: it needed PHP, which macOS no longer ships, and a fixer.io API key, which its free tier now rejects. This version keeps the features and the way you type, and needs neither.
 
 - **No PHP.** It runs on the Python 3 that comes with Apple's developer tools (`/usr/bin/python3`), with no packages to install.

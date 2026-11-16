@@ -48,6 +48,8 @@ The money calculator reads rates from a cache that a detached process refreshes;
 | `info.plist` | Alfred objects, connections and the configuration panel. |
 | `tests/test_calculate.py` | Offline test suite. |
 | `tools/alfredctl.swift` | Helper for testing inside Alfred; see `docs/MEMORY.md`. |
+| `tools/demo/` | The README animation: `storyboard.py` runs every keystroke of seven queries through `ca.app.run`, `render.swift` draws each frame in Alfred's Big Sur Dark theme, `make.sh` encodes `docs/images/demo.gif` with ffmpeg. |
+| `docs/images/demo.gif` | The README animation (left out of the workflow package). |
 
 Each module's docstring lists the query forms it accepts.
 
